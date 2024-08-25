@@ -9,13 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.1",
     "@web3auth/base": "^8.12.4",
     "@web3auth/ethereum-provider": "^8.12.4",
     "@web3auth/modal": "^8.12.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.30",
+    "gsap": "^3.12.5",
     "lucide-react": "^0.435.0",
+    "mini-svg-data-uri": "^1.4.4",
     "next": "14.2.6",
     "react": "^18",
     "react-dom": "^18",
