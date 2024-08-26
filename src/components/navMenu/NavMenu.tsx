@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 type MenuLink = {
   path: string;
@@ -17,7 +17,7 @@ type MenuLink = {
 
 const menuLinks: MenuLink[] = [
   { path: "/", label: "HOME" },
-  { path: "/regiser-project", label: "REGISTER PROJECT" },
+  { path: "/register-event", label: "REGISTER EVENT" },
   { path: "/multisender", label: "MULTISENDER" },
   { path: "/", label: "LOGIN" },
 ];
@@ -28,8 +28,11 @@ const NavMenu: React.FC = () => {
   const [userInfo, setUserInfo] = useState(null);
   const container = useRef<HTMLDivElement>(null);
   const tl = useRef<GSAPTimeline>();
-
+  
   const router = useRouter();
+  const pathname = usePathname();
+  const [page, setPage] = useState<string>(pathname);
+
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -75,8 +78,13 @@ const NavMenu: React.FC = () => {
     }
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    setPage(pathname);
+  }, [pathname]);
+
+  
   return (
-    <div className="menu-container" ref={container}>
+    <div className="menu-container relative z-50" ref={container}>
       <div className="menu-bar">
         <div className="menu-logo">
           <Link href={"/"}>
@@ -89,7 +97,7 @@ const NavMenu: React.FC = () => {
           </Link>
         </div>
         <div className="menu-open" onClick={toggleMenu}>
-          <Menu id={"open"} />
+          <Menu id={"open"} color={`${page === "/"? "white" : "black"}`}/>
         </div>
       </div>
       <div className="menu-overlay">
@@ -150,12 +158,7 @@ const NavMenu: React.FC = () => {
           </div>
           <div className="menu-info">
             <div className="menu-info-col">
-              <a href="#">X &#8599;</a>
-              <a href="#">
-                Instagram &#8599;
-              </a>
-              <a href="#">LinkedIn &#8599;</a>
-              <a href="#">Facebook &#8599;</a>
+              <a href="https://x.com/AeroDumpdotsend">Twitter/X &#8599;</a>
             </div>
             <div className="menu-info-col">
               <p>aerodrop.vercel.app</p>
@@ -163,7 +166,7 @@ const NavMenu: React.FC = () => {
           </div>
         </div>
         <div className="menu-preview">
-          <a href="#">
+          <a href="https://x.com/AeroDumpdotsend">
             meet the devs &#8599;
           </a>
         </div>

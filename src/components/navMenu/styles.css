@@ -42,7 +42,9 @@
     z-index: 999;
     display: flex;
     clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+    overflow: hidden;
 }
+
 .menu-overlay-bar{
     position: fixed;
     width: 100%;
@@ -90,6 +92,7 @@
 
 .menu-link-item-holder {
     position: relative;
+    text-overflow: wrap;
 }
 
 .menu-link-item-holder a {
@@ -98,6 +101,7 @@
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 85%;
+    text-overflow: wrap;
 }
 
 .menu-info {
@@ -121,6 +125,9 @@
     }
 
     .menu-link-item-holder a {
-         font-size: 60px;
+         font-size: 32px;
+    }
+    .menu-preview{
+        display: none;
     }
 } 
