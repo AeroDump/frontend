@@ -1,19 +1,18 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { useWeb3Auth } from "@/config/web3AuthProvider";
 import Link from "next/link";
-import "./styles.css";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import { useAccount } from "wagmi";
+import "./styles.css";
 
 type MenuLink = {
   path: string;
   label: string;
 };
-
 
 const menuLinks: MenuLink[] = [
   { path: "/", label: "HOME" },
@@ -23,58 +22,44 @@ const menuLinks: MenuLink[] = [
 ];
 
 const NavMenu: React.FC = () => {
-  const { provider, getUserInfo, logout } = useWeb3Auth();
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState(null);
-  const container = useRef<HTMLDivElement>(null);
-  const tl = useRef<GSAPTimeline>();
-  
+  const { isConnected } = useAccount();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [page, setPage] = useState<string>(pathname);
-
-
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const containerRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<GSAPTimeline>();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      const info = await getUserInfo();
-      setUserInfo(info);
-    };
+    if (!isConnected) {
+      router.push("/");
+    }
+  }, [isConnected, router]);
 
-    fetchUserInfo();
-  }, [getUserInfo]);
-
-  useGSAP(
-    () => {
-      gsap.set(".menu-link-item-holder", {
-        y: 75,
+  useGSAP(() => {
+    gsap.set(".menu-link-item-holder", { y: 75 });
+    tlRef.current = gsap
+      .timeline({ paused: true })
+      .to(".menu-overlay", {
+        duration: 1,
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        ease: "power4.inOut",
+      })
+      .to(".menu-link-item-holder", {
+        y: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: "power4.inOut",
+        delay: -0.75,
       });
-      tl.current = gsap
-        .timeline({ paused: true })
-        .to(".menu-overlay", {
-          duration: 1,
-          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-          ease: "power4.inOut",
-        })
-        .to(".menu-link-item-holder", {
-          y: 0,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power4.inOut",
-          delay: -0.75,
-        });
-    },
-    { scope: container }
-  );
+  }, { scope: containerRef });
 
   useEffect(() => {
     if (isMenuOpen) {
-      tl.current?.play();
+      tlRef.current?.play();
     } else {
-      tl.current?.reverse();
+      tlRef.current?.reverse();
     }
   }, [isMenuOpen]);
 
@@ -82,31 +67,27 @@ const NavMenu: React.FC = () => {
     setPage(pathname);
   }, [pathname]);
 
-  
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
   return (
-    <div className="menu-container relative z-50" ref={container}>
+    <div className="menu-container relative z-50" ref={containerRef}>
       <div className="menu-bar">
         <div className="menu-logo">
-          <Link href={"/"}>
-            <Image
-              src={"/logo.png"}
-              width={64}
-              height={64}
-              alt={"ABES-ACM"}
-            />
+          <Link href="/">
+            <Image src="/logo.png" width={64} height={64} alt="ABES-ACM" />
           </Link>
         </div>
         <div className="menu-open" onClick={toggleMenu}>
-          <Menu id={"open"} color={`${page === "/"? "white" : "black"}`}/>
+          <Menu id="open" color={page === "/" ? "white" : "black"} />
         </div>
       </div>
       <div className="menu-overlay">
         <div className="menu-overlay-bar">
           <div className="menu-logo">
-            <Link href={"/"}>Aerodump</Link>
+            <Link href="/">Aerodump</Link>
           </div>
           <div className="menu-close" onClick={toggleMenu}>
-            <X id={"close"} />
+            <X id="close" />
           </div>
         </div>
         <div className="menu-close-icon" onClick={toggleMenu}>
@@ -117,44 +98,12 @@ const NavMenu: React.FC = () => {
             {menuLinks.map((link, index) => (
               <div className="menu-link-item" key={index}>
                 <div className="menu-link-item-holder" onClick={toggleMenu}>
-                  <Link
-                    onClick={
-                      link.label !== "LOGIN"
-                        ? undefined
-                        : userInfo
-                          ? async () => {
-                            await logout();
-                            router.refresh();
-                          }
-                          : undefined
-                    }
-                    href={
-                      link.label !== "LOGIN"
-                        ? link.path
-                        : userInfo
-                          ? ""
-                          : "/auth/login"
-                    }
-                    className="menu-link"
-                  >
-                    {link.label !== "LOGIN"
-                      ? link.label
-                      : userInfo
-                        ? "LOGOUT"
-                        : "LOGIN"}
+                  <Link href={link.path} className="menu-link">
+                    {link.label}
                   </Link>
                 </div>
               </div>
             ))}
-            {/* {isAdmin && (
-              <div className="menu-link-item">
-                <div className="menu-link-item-holder" onClick={toggleMenu}>
-                  <Link href={"/admin"} className={"menu-link"}>
-                    ADMIN PANEL
-                  </Link>
-                </div>
-              </div>
-            )} */}
           </div>
           <div className="menu-info">
             <div className="menu-info-col">
@@ -166,9 +115,7 @@ const NavMenu: React.FC = () => {
           </div>
         </div>
         <div className="menu-preview">
-          <a href="https://x.com/AeroDumpdotsend">
-            meet the devs &#8599;
-          </a>
+          <a href="https://x.com/AeroDumpdotsend">meet the devs &#8599;</a>
         </div>
       </div>
     </div>
