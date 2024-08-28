@@ -1,15 +1,16 @@
 "use client";
-import { useWeb3Auth } from "@/config/web3AuthProvider";
 import { Vortex } from "@/components/ui/vortex";
+import { useRouter } from 'next/navigation';
+import { useAccount, useConnect } from "wagmi";
 
 export default function Home() {
-  const { loggedIn, login } = useWeb3Auth();
+  const { isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
+  const router = useRouter();
 
-  const unloggedInView = (
-    <button onClick={login} className="bg-white p-2 rounded-md">
-      Login
-    </button>
-  );
+  if (isConnected) {
+    router.push('/dashboard');
+  }
 
   return (
     <div className="w-full rounded-md h-[100vh] overflow-hidden">
@@ -26,7 +27,9 @@ export default function Home() {
           Seamless, Secure, and Automated Multi-Network Token Distribution.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
-          <div className="grid">{!loggedIn && unloggedInView}</div>
+          <button className="card bg-white" key={connectors[0].id} onClick={() => connect({ connector: connectors[0] })}>
+            {connectors[0].name}
+          </button>
         </div>
       </Vortex>
     </div>
