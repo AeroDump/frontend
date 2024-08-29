@@ -1,10 +1,10 @@
 "use client";
 import { Web3Auth } from "@web3auth/modal";
-import { CHAIN_NAMESPACES } from "@web3auth/base";
+import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
-import { mainnet } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query' 
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
 
@@ -44,6 +44,11 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
     web3AuthInstance.addPlugin(walletServicesPlugin);
   
     const modalConfig = {
+      [WALLET_ADAPTERS.OPENLOGIN]: {
+        label: "openlogin",
+        // setting it to false will hide all social login methods from modal.
+        showOnModal: true,
+      }
     }
 
     return Web3AuthConnector({
@@ -53,12 +58,12 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
   }
   
   const config = createConfig({
-    chains: [mainnet],
+    chains: [baseSepolia],
     transports: {
-      [mainnet.id]: http('https://ethereum-rpc.publicnode.com'),
+      [baseSepolia.id]: http('https://sepolia.base.org'),
     },
     connectors: [
-      Web3AuthConnectorInstance([mainnet]),
+      Web3AuthConnectorInstance([baseSepolia]),
     ],
   });
 

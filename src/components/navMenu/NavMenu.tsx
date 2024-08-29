@@ -7,7 +7,6 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
-import "./styles.css";
 
 type MenuLink = {
   path: string;
@@ -16,7 +15,7 @@ type MenuLink = {
 
 const menuLinks: MenuLink[] = [
   { path: "/", label: "HOME" },
-  { path: "/register-event", label: "REGISTER EVENT" },
+  { path: "/register", label: "REGISTER" },
   { path: "/multisender", label: "MULTISENDER" },
   { path: "/", label: "LOGIN" },
 ];
@@ -35,7 +34,7 @@ const NavMenu: React.FC = () => {
     if (!isConnected) {
       router.push("/");
     }
-  }, [isConnected, router]);
+  }, []);
 
   useGSAP(() => {
     gsap.set(".menu-link-item-holder", { y: 75 });
@@ -70,7 +69,7 @@ const NavMenu: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
-    <div className="menu-container relative z-50" ref={containerRef}>
+    <div ref={containerRef}>
       <div className="menu-bar">
         <div className="menu-logo">
           <Link href="/">
