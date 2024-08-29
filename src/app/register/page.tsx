@@ -39,7 +39,7 @@ export default function Register() {
   const onSubmitInput = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (slide === slides.length - 1) {
-      
+      registerProject();
     }
     setSlide((prev) => prev + 1);
   }
