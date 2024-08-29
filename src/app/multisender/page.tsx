@@ -1,28 +1,15 @@
 "use client"
-import { HoverEffect } from '@/components/ui/card-hover-effect';
 import { FileUpload } from '@/components/ui/file-upload';
 import gsap from 'gsap';
 import React, { useEffect, useRef, useState } from 'react';
-import { TokenTransferInfo } from './helper';
+import { supportedCurrencies, TokenTransferInfo } from './types';
 import Papa from "papaparse";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import { Input } from '@/components/ui/input';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import { sampleTokenTransferInfo } from './helper';
+import { Button } from '@/components/ui/button';
+import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select"
+import { supportedChains } from './types';
+import { Plus, PlusIcon } from 'lucide-react';
 
 const MultiSender = () => {
   const heading = useRef<HTMLDivElement>(null);
@@ -54,6 +41,11 @@ const MultiSender = () => {
       )
     );
   };
+
+  const addEmptyRow = () => {
+    setTokenTransferInfo((prevInfo) => [...prevInfo, { walletAddress: "", chain: "", amount: 0, currency: "" }]);
+  };
+
 
   useEffect(() => {
     if (files.length > 0) {
@@ -101,38 +93,14 @@ const MultiSender = () => {
         </div>
 
       </div>
-      <Accordion type="single" collapsible className="w-full max-w-4xl mx-auto px-4 text-bold mt-8">
-        <AccordionItem value="item-1">
-          <AccordionTrigger className='font-semibold '>Please Make sure that the Provided CSV follows this schema</AccordionTrigger>
-          <AccordionContent>
-            <Table className='w-full max-w-4xl mx-auto'>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Wallet Address</TableHead>
-                  <TableHead>Chain</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead className="text-right w-[100px]">Currency</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sampleTokenTransferInfo.map((item: TokenTransferInfo, index) => (
-                  <TableRow key={index} className='hover:bg-neutral-200'>
-                    <TableCell className="font-medium">{item.walletAddress}</TableCell>
-                    <TableCell>{item.chain}</TableCell>
-                    <TableCell>{item.amount}</TableCell>
-                    <TableCell className="text-right w-[100px]">{item.currency}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
 
+      <div className='w-full max-w-4xl mx-auto flex justify-between items-center p-4 font-semibold'>
+        <p className='text-black underline underline-offset-4 italic'>Please Make sure the providede csv follows the supported schema </p>
+        <a href={"/Sample.csv"} download><Button className='bg-black text-white rounded-xl hover:bg-black hover:text-white hover:scale-[102%]'>Download Sample CSV</Button></a>
+      </div>
 
       {tokenTransferInfo.length > 0 && (
         <Table className='w-full max-w-4xl mx-auto'>
-          <TableCaption>Token Distribution Overview</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Wallet Address</TableHead>
@@ -151,10 +119,22 @@ const MultiSender = () => {
                   />
                 </TableCell>
                 <TableCell>
-                  <Input
+                  <Select
                     value={item.chain}
-                    onChange={(e) => handleDataChange(index, "chain", e.target.value)}
-                  />
+                    onValueChange={(val) => handleDataChange(index, "chain", val)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue>{item.chain}</SelectValue> {/* Display the current value */}
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup className='bg-black text-white'>
+                        <SelectLabel>Supported Chains</SelectLabel>
+                        {supportedChains.map((chain, chainIndex) => (
+                          <SelectItem value={chain} key={chainIndex}>{chain}</SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -163,23 +143,54 @@ const MultiSender = () => {
                     onChange={(e) => handleDataChange(index, "amount", parseFloat(e.target.value))}
                   />
                 </TableCell>
-                <TableCell className="text-right w-[100px]">
-                  <Input
+                <TableCell>
+                  <Select
                     value={item.currency}
-                    onChange={(e) => handleDataChange(index, "currency", e.target.value)}
-                  />
+                    onValueChange={(val) => handleDataChange(index, "currency", val)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue>{item.currency}</SelectValue> {/* Display the current value */}
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup className='bg-black text-white'>
+                        <SelectLabel>Supported Currencies</SelectLabel>
+                        {supportedCurrencies.map((currency, currencyIndex) => (
+                          <SelectItem value={currency} key={currencyIndex}>{currency}</SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </TableCell>
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell>
+                <div className='w-full max-w-4xl mx-auto flex justify-end items-center p-4 font-semibold'>
+                  <Button
+                    className='bg-black text-white rounded-xl hover:bg-black hover:text-white hover:scale-[102%] pl-7' onClick={addEmptyRow}>
+                    Add More <PlusIcon height={20} />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={3}>Total</TableCell>
-              <TableCell className="text-right">{totalAmount}</TableCell>
+              <TableCell colSpan={3} className='text-xl font-semibold'>Total</TableCell>
+              <TableCell className="text-right text-xl font-semibold">${totalAmount}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>
       )}
+      {tokenTransferInfo.length === 0 && <div className='w-full max-w-4xl mx-auto flex justify-end items-center p-4 font-semibold'>
+        <Button
+          className='bg-black text-white rounded-xl hover:bg-black hover:text-white hover:scale-[102%] pl-7' onClick={addEmptyRow}>
+          Add Manually <PlusIcon height={20} />
+        </Button>
+      </div>}
     </div>
   );
 }

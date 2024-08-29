@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@tabler/icons-react": "^3.14.0",
     "@wagmi/core": "^2.13.4",
     "@web3auth/base": "^8.12.4",
     "@web3auth/ethereum-provider": "^8.12.4",
