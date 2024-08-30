@@ -26,9 +26,11 @@ const secondaryVariant = {
 };
 
 export const FileUpload = ({
-  onChange,
+  onChange, heading, subheading
 }: {
   onChange?: (files: File[]) => void;
+  heading: string;
+  subheading: string
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +42,7 @@ export const FileUpload = ({
       setFiles((prevFiles) => [...prevFiles, ...validFiles]);
       onChange && onChange(validFiles);
     } else {
+      
       console.log("Wrong Format");
     }
   };
@@ -75,12 +78,8 @@ export const FileUpload = ({
           <GridPattern />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <p className="relative z-20 font-sans font-bold text-neutral-300 text-base">
-            Upload file
-          </p>
-          <p className="relative z-20 font-sans font-normal text-neutral-400 text-base mt-2">
-            Drag or drop your files here or click to upload
-          </p>
+          <p className="relative z-20 font-sans font-bold text-neutral-300 text-base">{heading}</p>
+          <p className="relative z-20 font-sans font-normal text-neutral-400 text-base mt-2">{subheading}</p>
           <div className="relative w-full mt-10 max-w-xl mx-auto">
             {files.length > 0 &&
               files.map((file, idx) => (

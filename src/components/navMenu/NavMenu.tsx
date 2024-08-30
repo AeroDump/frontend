@@ -70,7 +70,7 @@ const NavMenu: React.FC = () => {
 
   return (
     <div ref={containerRef}>
-      <div className="menu-bar">
+      <div className="menu-bar" style={{ backgroundColor: page === "/" ? "black" : "white" }}>
         <div className="menu-logo">
           <Link href="/">
             <Image src="/logo.png" width={64} height={64} alt="ABES-ACM" />
@@ -80,7 +80,7 @@ const NavMenu: React.FC = () => {
           <Menu id="open" color={page === "/" ? "white" : "black"} />
         </div>
       </div>
-      <div className="menu-overlay">
+      <div className="menu-overlay bg-black">
         <div className="menu-overlay-bar">
           <div className="menu-logo">
             <Link href="/">Aerodump</Link>
