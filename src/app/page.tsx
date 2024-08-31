@@ -13,7 +13,7 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full rounded-md h-[100vh] overflow-hidden">
+    <div className="w-full rounded-md h-[95vh] overflow-hidden">
       <Vortex
         backgroundColor="black"
         className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
@@ -27,7 +27,7 @@ export default function Home() {
           Seamless, Secure, and Automated Multi-Network Token Distribution.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
-          <button className="card bg-white" key={connectors[0].id} onClick={() => connect({ connector: connectors[0] })}>
+          <button className="card bg-white rounded-xl px-3 py-2  hover:scale-105" key={connectors[0].id} onClick={() => connect({ connector: connectors[0] })}>
             {connectors[0].name}
           </button>
         </div>
