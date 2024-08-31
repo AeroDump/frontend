@@ -43,7 +43,7 @@ export default function Home() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="space-x-4"
           >
-            {connectors.map((connector) => (
+            {connectors.map((connector:any) => (
               <button
                 key={connector.id}
                 onClick={() => connect({ connector })}
