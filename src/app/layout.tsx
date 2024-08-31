@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavMenu from "@/components/navMenu/NavMenu";
 import Web3AuthProvider from "@/config/web3AuthProvider";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <Web3AuthProvider>
-        <NavMenu />
-        {children}
-      </Web3AuthProvider>
+        <Web3AuthProvider>
+          <Navbar />
+          {children}
+        </Web3AuthProvider>
       </body>
     </html>
   );
