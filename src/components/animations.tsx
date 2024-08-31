@@ -1,15 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import gsap from 'gsap';
+import React, { useRef, useEffect, useState } from 'react';
+import { useInView, useAnimation } from 'framer-motion';
+
+import { gsap } from "gsap";
 
 export function Heading({text}: {text: string}) {
   const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+  const mainControls = useAnimation();
+  const slideControls = useAnimation();
+
   useEffect(() => {
-    gsap.fromTo(
-      ref.current,
-      { y: 100, opacity: 0 },
-      { y: 0, opacity: 1, delay: 1, duration: 1.5, ease: 'power3.out' }
-    );
-  }, [text])
+    if (isInView) {
+      mainControls.start("visible");
+      slideControls.start("visible");
+    }
+  }, [isInView, mainControls, slideControls]);
+
   return (
     <h1 ref={ref} className="text-4xl sm:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-t from-neutral-300 to-neutral-500 py-8">{text}</h1>
   )
@@ -18,6 +24,7 @@ export function Heading({text}: {text: string}) {
 export function SubHeading({text}: {text: string}) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     gsap.fromTo(
       ref.current,
@@ -31,7 +38,8 @@ export function SubHeading({text}: {text: string}) {
         onComplete: () => setHasAnimated(true),
       }
     );
-  }, [text])
+  }, [text, hasAnimated])
+
   return (
     <h2 ref={ref} className="text-4xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-t from-neutral-300 to-neutral-500 py-8 flex flex-col gap-8 items-center w-full justify-center">{text}</h2>
   )
