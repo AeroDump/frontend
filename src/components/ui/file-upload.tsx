@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "sonner"
 
 const mainVariant = {
   initial: {
@@ -42,8 +43,7 @@ export const FileUpload = ({
       setFiles((prevFiles) => [...prevFiles, ...validFiles]);
       onChange && onChange(validFiles);
     } else {
-      
-      console.log("Wrong Format");
+      toast.error('Invalid Format (CSV Expected)')
     }
   };
 

@@ -20,8 +20,6 @@ const MultiSender = () => {
   };
 
   const parseCSVFiles = (newFiles: File[]) => {
-    console.log("parser entry");
-
     const parsedDataPromises = newFiles.map((file: File) =>
       new Promise<TokenTransferInfo[]>((resolve) => {
         Papa.parse<TokenTransferInfo>(file, {
@@ -36,8 +34,6 @@ const MultiSender = () => {
     // Wait for all files to be parsed
     Promise.all(parsedDataPromises).then((allParsedData) => {
       const combinedData = allParsedData.flat(); // Flatten the array of arrays
-      console.log("loop ends");
-      console.log("parsed data", combinedData);
       setTokenTransferInfo((prev) => [...prev, ...combinedData]); // Update the state with the parsed data
     });
   };
@@ -56,7 +52,6 @@ const MultiSender = () => {
 
   useEffect(() => {
     if (tokenTransferInfo.length > 0) {
-      console.log("newList", tokenTransferInfo)
       setTotalAmount(
         tokenTransferInfo.reduce((acc, item) => {
           const amount = parseFloat(item.amount as unknown as string); // Convert to a number

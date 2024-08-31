@@ -1,10 +1,11 @@
 "use client"
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Heading, SubHeading } from "@/components/animations";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import { CONTRACT } from "@/contracts";
 import { useWriteContract } from "wagmi";
 import Image from 'next/image';
+import { auth } from "@/components/auth";
 
 interface Slide {
   label: string;
@@ -18,7 +19,7 @@ const slides: Slide[] = [
   { label: "twitter", placeholders: ['@uniswap', '@pancakeswap'] },
 ];
 
-export default function Register() {
+function Register() {
   const { data: hash, writeContract, error } = useWriteContract();
   const [slide, setSlide] = useState<number>(0);
   const [formData, setFormData] = useState({
@@ -40,8 +41,9 @@ export default function Register() {
     e.preventDefault();
     if (slide === slides.length - 1) {
       registerProject();
+    } else {
+      setSlide((prev) => prev + 1);
     }
-    setSlide((prev) => prev + 1);
   }
 
   const registerProject = () => {
@@ -56,18 +58,25 @@ export default function Register() {
   const renderForm = () => {
     if (slide === slides.length) {
       return (
-        <Image
-          src="/congrats.gif"
-          width={500}
-          height={400}
-          alt="Congrats"
-        />
+        <div className="text-center">
+          <Image
+            src="/congrats.gif"
+            width={500}
+            height={400}
+            alt="Congrats"
+          />
+          <p className="mt-4 text-xl">Your project has been registered successfully!</p>
+        </div>
       )
     }
     return (
       <>
         <SubHeading text={slides[slide].label} />
-        <PlaceholdersAndVanishInput placeholders={slides[slide]?.placeholders} onChange={handleChange} onSubmit={onSubmitInput}/>
+        <PlaceholdersAndVanishInput 
+          placeholders={slides[slide]?.placeholders} 
+          onChange={handleChange} 
+          onSubmit={onSubmitInput}
+        />
       </>
     )
   }
@@ -80,3 +89,5 @@ export default function Register() {
     </div>
   )
 }
+
+export default auth(Register);
