@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Web3AuthProvider from "@/config/web3AuthProvider";
-import Navbar from "@/components/navbar";
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import { Toaster } from "@/components/ui/sonner"
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const Web3AuthProvider = dynamic(() => import("@/config/web3AuthProvider"), {
+  ssr: false,
+});
+
+const Navbar = dynamic(() => import("@/components/Navbar"), {
+  loading: () => <div>Loading...</div>,
+});
 
 export const metadata: Metadata = {
   title: "Aerodump",
@@ -18,11 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={`${inter.variable} font-sans`}>
+      <body>
         <Web3AuthProvider>
-          <Navbar />
-          {children}
+          <Suspense fallback={<div>Loading...</div>}>
+            <Navbar />
+          </Suspense>
+          <main>{children}</main>
           <Toaster />
         </Web3AuthProvider>
       </body>

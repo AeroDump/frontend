@@ -3,7 +3,8 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import { Check } from 'lucide-react';
 
 const mainVariant = {
   initial: {
@@ -42,6 +43,7 @@ export const FileUpload = ({
     if (validFiles.length) {
       setFiles((prevFiles) => [...prevFiles, ...validFiles]);
       onChange && onChange(validFiles);
+      toast.success('CSV file uploaded successfully');
     } else {
       toast.error('Invalid Format (CSV Expected)')
     }
@@ -81,6 +83,12 @@ export const FileUpload = ({
           <p className="relative z-20 font-sans font-bold text-neutral-300 text-base">{heading}</p>
           <p className="relative z-20 font-sans font-normal text-neutral-400 text-base mt-2">{subheading}</p>
           <div className="relative w-full mt-10 max-w-xl mx-auto">
+            {files.length > 0 && (
+              <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-md flex items-center">
+                <Check className="mr-2" size={20} />
+                <span>CSV file uploaded successfully</span>
+              </div>
+            )}
             {files.length > 0 &&
               files.map((file, idx) => (
                 <motion.div

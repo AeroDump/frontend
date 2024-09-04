@@ -1,7 +1,11 @@
 
-const CONTRACT_ADDRESS: `0x${string}` = '0x5c33941c4AF7bFc5d5b1bF09f93075F2563A8d8e';
+const CONTRACT_ADDRESS_ATTESTATIONS: `0x${string}` = '0xe734076F9B3C4Af1920e92B218B4C3691a1b02d7';
 
-const CONTRACT_ABI: any[] = [
+const CONTRACT_ADDRESS_OFTADAPTER: `0x${string}` = '0x0b7C1E3eF86adf0b33b0d542271FdDe8369699Dc';
+
+const CONTRACT_ADDRESS_BASE_SEPOLIA_USDC: `0x${string}` = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+
+const CONTRACT_ABI_ATTESTATIONS: any[] = [
   {
       "inputs": [
           {
@@ -256,19 +260,6 @@ const CONTRACT_ABI: any[] = [
       "type": "function"
   },
   {
-      "inputs": [],
-      "name": "projectSchemaId",
-      "outputs": [
-          {
-              "internalType": "uint64",
-              "name": "",
-              "type": "uint64"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-  },
-  {
       "inputs": [
           {
               "internalType": "string",
@@ -312,9 +303,9 @@ const CONTRACT_ABI: any[] = [
   {
       "inputs": [
           {
-              "internalType": "string",
-              "name": "projectName",
-              "type": "string"
+              "internalType": "uint256",
+              "name": "projectId",
+              "type": "uint256"
           },
           {
               "internalType": "address",
@@ -327,7 +318,7 @@ const CONTRACT_ABI: any[] = [
               "type": "uint256"
           }
       ],
-      "name": "recordProjectTokenDeposit",
+      "name": "recordLockTokens",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -356,7 +347,7 @@ const CONTRACT_ABI: any[] = [
       "inputs": [
           {
               "internalType": "uint64",
-              "name": "_verifyProjectCertificateSchemaId",
+              "name": "_verifyCertificateSchemaId",
               "type": "uint64"
           },
           {
@@ -391,19 +382,6 @@ const CONTRACT_ABI: any[] = [
           }
       ],
       "name": "setSchemaIds",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "string",
-              "name": "projectName",
-              "type": "string"
-          }
-      ],
-      "name": "signRefundAgreement",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -461,6 +439,19 @@ const CONTRACT_ABI: any[] = [
       "type": "function"
   },
   {
+      "inputs": [],
+      "name": "verifyCertificateSchemaId",
+      "outputs": [
+          {
+              "internalType": "uint64",
+              "name": "",
+              "type": "uint64"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
       "inputs": [
           {
               "internalType": "string",
@@ -469,7 +460,7 @@ const CONTRACT_ABI: any[] = [
           },
           {
               "internalType": "string",
-              "name": "projectDescription",
+              "name": "description",
               "type": "string"
           },
           {
@@ -479,7 +470,7 @@ const CONTRACT_ABI: any[] = [
           },
           {
               "internalType": "string",
-              "name": "twitterUrl",
+              "name": "socialMediaUrl",
               "type": "string"
           }
       ],
@@ -493,15 +484,1699 @@ const CONTRACT_ABI: any[] = [
       ],
       "stateMutability": "nonpayable",
       "type": "function"
+  }
+];
+
+const CONTRACT_ABI_OFTADAPTER: any[] = [
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "_token",
+              "type": "address"
+          },
+          {
+              "internalType": "address",
+              "name": "_layerZeroEndpoint",
+              "type": "address"
+          },
+          {
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+          },
+          {
+              "internalType": "address",
+              "name": "_aeroDumpAttestationsAddress",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
   },
   {
       "inputs": [],
-      "name": "verifyProjectCertificateSchemaId",
+      "name": "InvalidDelegate",
+      "type": "error"
+  },
+  {
+      "inputs": [],
+      "name": "InvalidEndpointCall",
+      "type": "error"
+  },
+  {
+      "inputs": [],
+      "name": "InvalidLocalDecimals",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "bytes",
+              "name": "options",
+              "type": "bytes"
+          }
+      ],
+      "name": "InvalidOptions",
+      "type": "error"
+  },
+  {
+      "inputs": [],
+      "name": "LzTokenUnavailable",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32"
+          }
+      ],
+      "name": "NoPeer",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "msgValue",
+              "type": "uint256"
+          }
+      ],
+      "name": "NotEnoughNative",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+          }
+      ],
+      "name": "OnlyEndpoint",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "sender",
+              "type": "bytes32"
+          }
+      ],
+      "name": "OnlyPeer",
+      "type": "error"
+  },
+  {
+      "inputs": [],
+      "name": "OnlySelf",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+          }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+          }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+          }
+      ],
+      "name": "SafeERC20FailedOperation",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "bytes",
+              "name": "result",
+              "type": "bytes"
+          }
+      ],
+      "name": "SimulationResult",
+      "type": "error"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "amountLD",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "minAmountLD",
+              "type": "uint256"
+          }
+      ],
+      "name": "SlippageExceeded",
+      "type": "error"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "dstChainId",
+              "type": "uint256"
+          }
+      ],
+      "name": "AerodumpOFTAdapter__TokensCredited",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "projectId",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "dstChainId",
+              "type": "uint256"
+          }
+      ],
+      "name": "AerodumpOFTAdapter__TokensLocked",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "eid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "uint16",
+                      "name": "msgType",
+                      "type": "uint16"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "options",
+                      "type": "bytes"
+                  }
+              ],
+              "indexed": false,
+              "internalType": "struct EnforcedOptionParam[]",
+              "name": "_enforcedOptions",
+              "type": "tuple[]"
+          }
+      ],
+      "name": "EnforcedOptionSet",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "address",
+              "name": "inspector",
+              "type": "address"
+          }
+      ],
+      "name": "MsgInspectorSet",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "srcEid",
+              "type": "uint32"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "toAddress",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amountReceivedLD",
+              "type": "uint256"
+          }
+      ],
+      "name": "OFTReceived",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "dstEid",
+              "type": "uint32"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "fromAddress",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amountSentLD",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amountReceivedLD",
+              "type": "uint256"
+          }
+      ],
+      "name": "OFTSent",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+          }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32"
+          },
+          {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "peer",
+              "type": "bytes32"
+          }
+      ],
+      "name": "PeerSet",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "address",
+              "name": "preCrimeAddress",
+              "type": "address"
+          }
+      ],
+      "name": "PreCrimeSet",
+      "type": "event"
+  },
+  {
+      "inputs": [],
+      "name": "PROJECT_ID",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "SEND",
+      "outputs": [
+          {
+              "internalType": "uint16",
+              "name": "",
+              "type": "uint16"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "SEND_AND_CALL",
+      "outputs": [
+          {
+              "internalType": "uint16",
+              "name": "",
+              "type": "uint16"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "srcEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "sender",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint64",
+                      "name": "nonce",
+                      "type": "uint64"
+                  }
+              ],
+              "internalType": "struct Origin",
+              "name": "origin",
+              "type": "tuple"
+          }
+      ],
+      "name": "allowInitializePath",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "approvalRequired",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "name": "checkUpkeep",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "upkeepNeeded",
+              "type": "bool"
+          },
+          {
+              "internalType": "bytes",
+              "name": "performData",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "_eid",
+              "type": "uint32"
+          },
+          {
+              "internalType": "uint16",
+              "name": "_msgType",
+              "type": "uint16"
+          },
+          {
+              "internalType": "bytes",
+              "name": "_extraOptions",
+              "type": "bytes"
+          }
+      ],
+      "name": "combineOptions",
+      "outputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "decimalConversionRate",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "endpoint",
+      "outputs": [
+          {
+              "internalType": "contract ILayerZeroEndpointV2",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32"
+          },
+          {
+              "internalType": "uint16",
+              "name": "msgType",
+              "type": "uint16"
+          }
+      ],
+      "name": "enforcedOptions",
+      "outputs": [
+          {
+              "internalType": "bytes",
+              "name": "enforcedOption",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "name": "equalDistributionQueue",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "projectId",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint32",
+              "name": "dstChainId",
+              "type": "uint32"
+          },
+          {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+          },
+          {
+              "internalType": "uint256",
+              "name": "amountToSend",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "equalDistributionQueueFrontIndex",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "name": "fakeCheckUpkeep",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "upkeepNeeded",
+              "type": "bool"
+          },
+          {
+              "internalType": "bytes",
+              "name": "performData",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "name": "fakePerformUpkeep",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "getProjectDetailsForProjectOwner",
+      "outputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "bool",
+                      "name": "isAirdropActive",
+                      "type": "bool"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "projectId",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "address",
+                      "name": "ownerOfTheProject",
+                      "type": "address"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "amountLockedInContract",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "incomingChainId",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "bool",
+                      "name": "isSentToRecipients",
+                      "type": "bool"
+                  },
+                  {
+                      "internalType": "address[]",
+                      "name": "recipients",
+                      "type": "address[]"
+                  },
+                  {
+                      "internalType": "uint32[]",
+                      "name": "outgoingChainIds",
+                      "type": "uint32[]"
+                  }
+              ],
+              "internalType": "struct AerodumpOFTAdapter.project",
+              "name": "",
+              "type": "tuple"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "srcEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "sender",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint64",
+                      "name": "nonce",
+                      "type": "uint64"
+                  }
+              ],
+              "internalType": "struct Origin",
+              "name": "",
+              "type": "tuple"
+          },
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          },
+          {
+              "internalType": "address",
+              "name": "_sender",
+              "type": "address"
+          }
+      ],
+      "name": "isComposeMsgSender",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "_eid",
+              "type": "uint32"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "_peer",
+              "type": "bytes32"
+          }
+      ],
+      "name": "isPeer",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "_projectId",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "_amount",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "_minAmount",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint32",
+              "name": "_dstChainId",
+              "type": "uint32"
+          }
+      ],
+      "name": "lockTokens",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "amountSent",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "amountRecievedByRemote",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "srcEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "sender",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint64",
+                      "name": "nonce",
+                      "type": "uint64"
+                  }
+              ],
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "_guid",
+              "type": "bytes32"
+          },
+          {
+              "internalType": "bytes",
+              "name": "_message",
+              "type": "bytes"
+          },
+          {
+              "internalType": "address",
+              "name": "_executor",
+              "type": "address"
+          },
+          {
+              "internalType": "bytes",
+              "name": "_extraData",
+              "type": "bytes"
+          }
+      ],
+      "name": "lzReceive",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "components": [
+                          {
+                              "internalType": "uint32",
+                              "name": "srcEid",
+                              "type": "uint32"
+                          },
+                          {
+                              "internalType": "bytes32",
+                              "name": "sender",
+                              "type": "bytes32"
+                          },
+                          {
+                              "internalType": "uint64",
+                              "name": "nonce",
+                              "type": "uint64"
+                          }
+                      ],
+                      "internalType": "struct Origin",
+                      "name": "origin",
+                      "type": "tuple"
+                  },
+                  {
+                      "internalType": "uint32",
+                      "name": "dstEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "address",
+                      "name": "receiver",
+                      "type": "address"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "guid",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "value",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "address",
+                      "name": "executor",
+                      "type": "address"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "message",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "extraData",
+                      "type": "bytes"
+                  }
+              ],
+              "internalType": "struct InboundPacket[]",
+              "name": "_packets",
+              "type": "tuple[]"
+          }
+      ],
+      "name": "lzReceiveAndRevert",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "srcEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "sender",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint64",
+                      "name": "nonce",
+                      "type": "uint64"
+                  }
+              ],
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "_guid",
+              "type": "bytes32"
+          },
+          {
+              "internalType": "bytes",
+              "name": "_message",
+              "type": "bytes"
+          },
+          {
+              "internalType": "address",
+              "name": "_executor",
+              "type": "address"
+          },
+          {
+              "internalType": "bytes",
+              "name": "_extraData",
+              "type": "bytes"
+          }
+      ],
+      "name": "lzReceiveSimulate",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "msgInspector",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+          }
+      ],
+      "name": "nextNonce",
       "outputs": [
           {
               "internalType": "uint64",
-              "name": "",
+              "name": "nonce",
               "type": "uint64"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "oApp",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "oAppVersion",
+      "outputs": [
+          {
+              "internalType": "uint64",
+              "name": "senderVersion",
+              "type": "uint64"
+          },
+          {
+              "internalType": "uint64",
+              "name": "receiverVersion",
+              "type": "uint64"
+          }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "oftVersion",
+      "outputs": [
+          {
+              "internalType": "bytes4",
+              "name": "interfaceId",
+              "type": "bytes4"
+          },
+          {
+              "internalType": "uint64",
+              "name": "version",
+              "type": "uint64"
+          }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32"
+          }
+      ],
+      "name": "peers",
+      "outputs": [
+          {
+              "internalType": "bytes32",
+              "name": "peer",
+              "type": "bytes32"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "name": "performUpkeep",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "preCrime",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "name": "projectIdToOwner",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "name": "projects",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "isAirdropActive",
+              "type": "bool"
+          },
+          {
+              "internalType": "uint256",
+              "name": "projectId",
+              "type": "uint256"
+          },
+          {
+              "internalType": "address",
+              "name": "ownerOfTheProject",
+              "type": "address"
+          },
+          {
+              "internalType": "uint256",
+              "name": "amountLockedInContract",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "incomingChainId",
+              "type": "uint256"
+          },
+          {
+              "internalType": "bool",
+              "name": "isSentToRecipients",
+              "type": "bool"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "_projectId",
+              "type": "uint256"
+          },
+          {
+              "internalType": "address[]",
+              "name": "_recipients",
+              "type": "address[]"
+          },
+          {
+              "internalType": "uint32",
+              "name": "_dstChainId",
+              "type": "uint32"
+          }
+      ],
+      "name": "queueAirdropWithEqualDistribution",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "dstEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "to",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "amountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "minAmountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "extraOptions",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "composeMsg",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "oftCmd",
+                      "type": "bytes"
+                  }
+              ],
+              "internalType": "struct SendParam",
+              "name": "_sendParam",
+              "type": "tuple"
+          }
+      ],
+      "name": "quoteOFT",
+      "outputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint256",
+                      "name": "minAmountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "maxAmountLD",
+                      "type": "uint256"
+                  }
+              ],
+              "internalType": "struct OFTLimit",
+              "name": "oftLimit",
+              "type": "tuple"
+          },
+          {
+              "components": [
+                  {
+                      "internalType": "int256",
+                      "name": "feeAmountLD",
+                      "type": "int256"
+                  },
+                  {
+                      "internalType": "string",
+                      "name": "description",
+                      "type": "string"
+                  }
+              ],
+              "internalType": "struct OFTFeeDetail[]",
+              "name": "oftFeeDetails",
+              "type": "tuple[]"
+          },
+          {
+              "components": [
+                  {
+                      "internalType": "uint256",
+                      "name": "amountSentLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "amountReceivedLD",
+                      "type": "uint256"
+                  }
+              ],
+              "internalType": "struct OFTReceipt",
+              "name": "oftReceipt",
+              "type": "tuple"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "dstEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "to",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "amountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "minAmountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "extraOptions",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "composeMsg",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "oftCmd",
+                      "type": "bytes"
+                  }
+              ],
+              "internalType": "struct SendParam",
+              "name": "_sendParam",
+              "type": "tuple"
+          },
+          {
+              "internalType": "bool",
+              "name": "_payInLzToken",
+              "type": "bool"
+          }
+      ],
+      "name": "quoteSend",
+      "outputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint256",
+                      "name": "nativeFee",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "lzTokenFee",
+                      "type": "uint256"
+                  }
+              ],
+              "internalType": "struct MessagingFee",
+              "name": "msgFee",
+              "type": "tuple"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "dstEid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "bytes32",
+                      "name": "to",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "amountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "minAmountLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "extraOptions",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "composeMsg",
+                      "type": "bytes"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "oftCmd",
+                      "type": "bytes"
+                  }
+              ],
+              "internalType": "struct SendParam",
+              "name": "_sendParam",
+              "type": "tuple"
+          },
+          {
+              "components": [
+                  {
+                      "internalType": "uint256",
+                      "name": "nativeFee",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "lzTokenFee",
+                      "type": "uint256"
+                  }
+              ],
+              "internalType": "struct MessagingFee",
+              "name": "_fee",
+              "type": "tuple"
+          },
+          {
+              "internalType": "address",
+              "name": "_refundAddress",
+              "type": "address"
+          }
+      ],
+      "name": "send",
+      "outputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "bytes32",
+                      "name": "guid",
+                      "type": "bytes32"
+                  },
+                  {
+                      "internalType": "uint64",
+                      "name": "nonce",
+                      "type": "uint64"
+                  },
+                  {
+                      "components": [
+                          {
+                              "internalType": "uint256",
+                              "name": "nativeFee",
+                              "type": "uint256"
+                          },
+                          {
+                              "internalType": "uint256",
+                              "name": "lzTokenFee",
+                              "type": "uint256"
+                          }
+                      ],
+                      "internalType": "struct MessagingFee",
+                      "name": "fee",
+                      "type": "tuple"
+                  }
+              ],
+              "internalType": "struct MessagingReceipt",
+              "name": "msgReceipt",
+              "type": "tuple"
+          },
+          {
+              "components": [
+                  {
+                      "internalType": "uint256",
+                      "name": "amountSentLD",
+                      "type": "uint256"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "amountReceivedLD",
+                      "type": "uint256"
+                  }
+              ],
+              "internalType": "struct OFTReceipt",
+              "name": "oftReceipt",
+              "type": "tuple"
+          }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "_delegate",
+              "type": "address"
+          }
+      ],
+      "name": "setDelegate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "components": [
+                  {
+                      "internalType": "uint32",
+                      "name": "eid",
+                      "type": "uint32"
+                  },
+                  {
+                      "internalType": "uint16",
+                      "name": "msgType",
+                      "type": "uint16"
+                  },
+                  {
+                      "internalType": "bytes",
+                      "name": "options",
+                      "type": "bytes"
+                  }
+              ],
+              "internalType": "struct EnforcedOptionParam[]",
+              "name": "_enforcedOptions",
+              "type": "tuple[]"
+          }
+      ],
+      "name": "setEnforcedOptions",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "_msgInspector",
+              "type": "address"
+          }
+      ],
+      "name": "setMsgInspector",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint32",
+              "name": "_eid",
+              "type": "uint32"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "_peer",
+              "type": "bytes32"
+          }
+      ],
+      "name": "setPeer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "_preCrime",
+              "type": "address"
+          }
+      ],
+      "name": "setPreCrime",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "sharedDecimals",
+      "outputs": [
+          {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [],
+      "name": "tokenAddress",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+          }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "name": "userIndexes",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
           }
       ],
       "stateMutability": "view",
@@ -509,7 +2184,19 @@ const CONTRACT_ABI: any[] = [
   }
 ];
 
-export const CONTRACT = {
-  address: CONTRACT_ADDRESS,
-  abi: CONTRACT_ABI,
+const CONTRACT_ABI_BASE_SEPOLIA_USDC: any[] = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"authorizer","type":"address"},{"indexed":true,"internalType":"bytes32","name":"nonce","type":"bytes32"}],"name":"AuthorizationCanceled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"authorizer","type":"address"},{"indexed":true,"internalType":"bytes32","name":"nonce","type":"bytes32"}],"name":"AuthorizationUsed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_account","type":"address"}],"name":"Blacklisted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newBlacklister","type":"address"}],"name":"BlacklisterChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"burner","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newMasterMinter","type":"address"}],"name":"MasterMinterChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"minter","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"minter","type":"address"},{"indexed":false,"internalType":"uint256","name":"minterAllowedAmount","type":"uint256"}],"name":"MinterConfigured","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"oldMinter","type":"address"}],"name":"MinterRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":false,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[],"name":"Pause","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newAddress","type":"address"}],"name":"PauserChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newRescuer","type":"address"}],"name":"RescuerChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_account","type":"address"}],"name":"UnBlacklisted","type":"event"},{"anonymous":false,"inputs":[],"name":"Unpause","type":"event"},{"inputs":[],"name":"CANCEL_AUTHORIZATION_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PERMIT_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"RECEIVE_WITH_AUTHORIZATION_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"TRANSFER_WITH_AUTHORIZATION_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"authorizer","type":"address"},{"internalType":"bytes32","name":"nonce","type":"bytes32"}],"name":"authorizationState","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"}],"name":"blacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"blacklister","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"authorizer","type":"address"},{"internalType":"bytes32","name":"nonce","type":"bytes32"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"cancelAuthorization","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"authorizer","type":"address"},{"internalType":"bytes32","name":"nonce","type":"bytes32"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"cancelAuthorization","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"minter","type":"address"},{"internalType":"uint256","name":"minterAllowedAmount","type":"uint256"}],"name":"configureMinter","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"currency","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"decrement","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"increment","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"tokenName","type":"string"},{"internalType":"string","name":"tokenSymbol","type":"string"},{"internalType":"string","name":"tokenCurrency","type":"string"},{"internalType":"uint8","name":"tokenDecimals","type":"uint8"},{"internalType":"address","name":"newMasterMinter","type":"address"},{"internalType":"address","name":"newPauser","type":"address"},{"internalType":"address","name":"newBlacklister","type":"address"},{"internalType":"address","name":"newOwner","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"newName","type":"string"}],"name":"initializeV2","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"lostAndFound","type":"address"}],"name":"initializeV2_1","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"accountsToBlacklist","type":"address[]"},{"internalType":"string","name":"newSymbol","type":"string"}],"name":"initializeV2_2","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"}],"name":"isBlacklisted","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"isMinter","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"masterMinter","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"mint","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"minter","type":"address"}],"name":"minterAllowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"nonces","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pauser","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"permit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"validAfter","type":"uint256"},{"internalType":"uint256","name":"validBefore","type":"uint256"},{"internalType":"bytes32","name":"nonce","type":"bytes32"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"receiveWithAuthorization","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"validAfter","type":"uint256"},{"internalType":"uint256","name":"validBefore","type":"uint256"},{"internalType":"bytes32","name":"nonce","type":"bytes32"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"receiveWithAuthorization","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"minter","type":"address"}],"name":"removeMinter","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"tokenContract","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueERC20","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"rescuer","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"validAfter","type":"uint256"},{"internalType":"uint256","name":"validBefore","type":"uint256"},{"internalType":"bytes32","name":"nonce","type":"bytes32"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"transferWithAuthorization","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"validAfter","type":"uint256"},{"internalType":"uint256","name":"validBefore","type":"uint256"},{"internalType":"bytes32","name":"nonce","type":"bytes32"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"transferWithAuthorization","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"}],"name":"unBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newBlacklister","type":"address"}],"name":"updateBlacklister","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newMasterMinter","type":"address"}],"name":"updateMasterMinter","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newPauser","type":"address"}],"name":"updatePauser","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newRescuer","type":"address"}],"name":"updateRescuer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"version","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"}];
+
+export const ATTESTATIONS_CONTRACT = {
+  address: CONTRACT_ADDRESS_ATTESTATIONS,
+  abi: CONTRACT_ABI_ATTESTATIONS,
+};
+
+export const OFTADAPTER_CONTRACT = {
+  address: CONTRACT_ADDRESS_OFTADAPTER,
+  abi: CONTRACT_ABI_OFTADAPTER,
+};
+
+export const BASE_SEPOLIA_USDC_CONTRACT = {
+  address: CONTRACT_ADDRESS_BASE_SEPOLIA_USDC,
+  abi: CONTRACT_ABI_BASE_SEPOLIA_USDC,
 };

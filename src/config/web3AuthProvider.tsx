@@ -1,63 +1,78 @@
 "use client";
 import { Web3Auth } from "@web3auth/modal";
-import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
+import { CHAIN_NAMESPACES, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
-import { baseSepolia } from "viem/chains";
+import { baseSepolia, Chain } from "viem/chains";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query' 
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
+import { useEffect, useState, useMemo } from 'react';
 
 const queryClient = new QueryClient() 
 
 export default function Web3AuthProvider({ children }: { children: React.ReactNode }) {
+  const [web3AuthInstance, setWeb3AuthInstance] = useState<Web3Auth | null>(null);
 
-  const Web3AuthConnectorInstance = (chains: any[]) => {
-    const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
+  const Web3AuthConnectorInstance = useMemo(() => {
+    return (chains: Chain[]) => {
+      const clientId = "BN3jcdNWn5MtAf41YMIuOM9Dq2a_NY3po3CKrxpp4NwY485PEeOe4rkF0071zs1sA5f7xRAa6fzeotrWFmDP5R8";
 
-    const chainConfig = {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0x" + chains[0].id.toString(16),
-      rpcTarget: chains[0].rpcUrls.default.http[0], // This is the public RPC we have added, please pass on your own endpoint while creating an app
-      displayName: chains[0].name,
-      tickerName: chains[0].nativeCurrency?.name,
-      ticker: chains[0].nativeCurrency?.symbol,
-      blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
-    };
+      const chainConfig = {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: "0x" + chains[0].id.toString(16),
+        rpcTarget: chains[0].rpcUrls.default.http[0],
+        displayName: chains[0].name,
+        tickerName: chains[0].nativeCurrency?.name,
+        ticker: chains[0].nativeCurrency?.symbol,
+        blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
+        logo: "https://web3auth.io/images/web3authlogodark.png",
+      };
 
-    const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
-  
-    const web3AuthInstance = new Web3Auth({
-      clientId,
-      privateKeyProvider,
-      web3AuthNetwork: "sapphire_mainnet",
-      enableLogging: true,
-    });
-  
-    const walletServicesPlugin = new WalletServicesPlugin({
-      walletInitOptions: {
-        whiteLabel: {
-          showWidgetButton: true,
+      const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
+    
+      const web3AuthInstance = new Web3Auth({
+        clientId,
+        chainConfig,
+        privateKeyProvider,
+        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        enableLogging: true,
+        // uiConfig: {
+        //   appName: 'aerodump',
+        //   defaultLanguage: "en",
+        //   modalZIndex: "2147483647",
+        //   logoLight: "https://web3auth.io/images/web3authlog.png",
+        //   logoDark: "https://web3auth.io/images/web3authlogodark.png",
+        //   uxMode: "redirect",
+        //   mode: "dark",
+        // },
+      });
+    
+      const walletServicesPlugin = new WalletServicesPlugin({
+        walletInitOptions: {
+          // whiteLabel: {
+          //   showWidgetButton: true,
+          // }
         }
+      });
+      web3AuthInstance.addPlugin(walletServicesPlugin);
+        
+      const modalConfig = {
+        [WALLET_ADAPTERS.OPENLOGIN]: {
+          label: "openlogin",
+          loginMethods: {},
+          showOnModal: true,
+        },
       }
-    });
-    web3AuthInstance.addPlugin(walletServicesPlugin);
-  
-    const modalConfig = {
-      [WALLET_ADAPTERS.OPENLOGIN]: {
-        label: "openlogin",
-        // setting it to false will hide all social login methods from modal.
-        showOnModal: true,
-      }
-    }
 
-    return Web3AuthConnector({
-      web3AuthInstance,
-      modalConfig
-    })
-  }
-  
-  const config = createConfig({
+      return Web3AuthConnector({
+        web3AuthInstance,
+        modalConfig
+      })
+    }
+  }, []);
+
+  const config = useMemo(() => createConfig({
     chains: [baseSepolia],
     transports: {
       [baseSepolia.id]: http('https://sepolia.base.org'),
@@ -65,7 +80,26 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
     connectors: [
       Web3AuthConnectorInstance([baseSepolia]),
     ],
-  });
+  }), [Web3AuthConnectorInstance]);
+
+  useEffect(() => {
+    const initWeb3Auth = async () => {
+      if (config.connectors[0] instanceof Web3AuthConnector) {
+        const web3AuthConnector = config.connectors[0] as any;
+        const web3AuthInstance = await web3AuthConnector.getWeb3AuthInstance();
+        setWeb3AuthInstance(web3AuthInstance);
+        await web3AuthInstance.initModal();
+      }
+    };
+
+    initWeb3Auth();
+
+    return () => {
+      if (web3AuthInstance) {
+        web3AuthInstance.logout();
+      }
+    };
+  }, [config]);
 
   return (
     <WagmiProvider config={config}>

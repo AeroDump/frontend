@@ -1,30 +1,46 @@
 "use client";
+import React, { memo } from "react";
 import { useDisconnect, useAccount, useBalance } from "wagmi";
-import { formatEther } from "viem";
 import { auth } from "@/components/auth";
+import { Heading, FadeInAnimation } from "@/components/animations";
 
 function Dashboard() {
+  const { address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { address, isConnected } = useAccount();
   const { data: balance } = useBalance({ address });
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-      {isConnected && (
-        <div className="mb-6">
-          <p><strong>Address:</strong> {address}</p>
-          <p><strong>Balance:</strong> {balance ? `${formatEther(balance.value)} ${balance.symbol}` : 'Loading...'}</p>
+    <div className="relative z-10 w-full max-w-4xl mx-auto px-4 py-8">
+      <Heading text="Dashboard" />
+      <FadeInAnimation>
+        <div className="bg-gray-900 p-8 rounded-2xl shadow-lg">
+          <FadeInAnimation delay={0.2}>
+            <AccountInfo address={address!} balance={balance} />
+          </FadeInAnimation>
+          <FadeInAnimation delay={0.4}>
+            <button
+              className="w-full bg-red-500 hover:bg-red-600 transition-colors duration-300 text-lg py-3 rounded-xl"
+              onClick={() => disconnect()}
+            >
+              Disconnect Wallet
+            </button>
+          </FadeInAnimation>
         </div>
-      )}
-      <button
-        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-        onClick={() => disconnect()}
-      >
-        Disconnect
-      </button>
+      </FadeInAnimation>
     </div>
   );
 }
+
+const AccountInfo = memo(({ address, balance }: { address: string, balance: any }) => (
+  <div className="mb-8 text-white">
+    <h2 className="text-2xl font-bold mb-4">Account Information</h2>
+    <div className="bg-gray-800 p-6 rounded-xl">
+      <p className="mb-4"><strong>Address:</strong> <span className="text-purple-400">{address}</span></p>
+      <p><strong>Balance:</strong> <span className="text-green-400">{balance ? `${balance.value} ${balance.symbol}` : 'Loading...'}</span></p>
+    </div>
+  </div>
+));
+
+AccountInfo.displayName = 'AccountInfo';
 
 export default auth(Dashboard);
