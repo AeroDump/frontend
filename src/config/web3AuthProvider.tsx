@@ -13,7 +13,7 @@ const queryClient = new QueryClient()
 export default function Web3AuthProvider({ children }: { children: React.ReactNode }) {
 
   const Web3AuthConnectorInstance = (chains: any[]) => {
-    const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
+    const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!
 
     const chainConfig = {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
