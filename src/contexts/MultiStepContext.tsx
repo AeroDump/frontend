@@ -8,8 +8,6 @@ interface MultiStepContextType {
   setCurrency: (currency: string) => void;
   recipients: TokenTransferInfo[];
   setRecipients: (recipients: TokenTransferInfo[]) => void;
-  projectDetails: ProjectDetails;
-  setProjectDetails: (details: ProjectDetails) => void;
   isVaultLocked: boolean;
   setIsVaultLocked: (isLocked: boolean) => void;
   isApproved: boolean;
@@ -25,13 +23,6 @@ export const MultiStepProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [chain, setChain] = useState<number>(84532);
   const [currency, setCurrency] = useState<string>('usdc');
   const [recipients, setRecipients] = useState<TokenTransferInfo[]>([]);
-  const [projectDetails, setProjectDetails] = useState<ProjectDetails>({
-    id: null,
-    name: '',
-    description: '',
-    website: '',
-    twitter: '',
-  });
   const [isVaultLocked, setIsVaultLocked] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
 
@@ -40,13 +31,6 @@ export const MultiStepProvider: React.FC<{ children: ReactNode }> = ({ children 
       setChain(84532);
       setCurrency('usdc');
       setRecipients([]);
-      setProjectDetails({
-        id: null,
-        name: '',
-        description: '',
-        website: '',
-        twitter: '',
-      });
       setIsVaultLocked(false);
       setIsApproved(false);
       setCurrentStepIndex(0);
@@ -60,15 +44,13 @@ export const MultiStepProvider: React.FC<{ children: ReactNode }> = ({ children 
     setCurrency,
     recipients,
     setRecipients,
-    projectDetails,
-    setProjectDetails,
     isVaultLocked,
     setIsVaultLocked,
     isApproved,
     setIsApproved,
     currentStepIndex,
     setCurrentStepIndex,
-  }), [chain, currency, recipients, projectDetails, isVaultLocked, isApproved, currentStepIndex]);
+  }), [chain, currency, recipients, isVaultLocked, isApproved, currentStepIndex]);
 
   return (
     <MultiStepContext.Provider value={value}>

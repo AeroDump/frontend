@@ -6,9 +6,10 @@ import { useContractInteraction } from '@/hooks/useContractInteraction';
 import { Address } from 'viem';
 
 export const SendFromVault: React.FC = () => {
-  const { recipients, chain } = useMultiStepContext();
+  const { recipients } = useMultiStepContext();
   const { projectId, queueEqualDistribution} = useContractInteraction();
   const [isSending, setIsSending] = useState(false);
+  const [selectedChain, setSelectedChain] = useState<number>(84532);
 
   const handleSendFromVault = () => {
     setIsSending(true);
@@ -17,7 +18,7 @@ export const SendFromVault: React.FC = () => {
       return;
     }
     const recipientAddresses = recipients?.map((recipient) => recipient.walletAddress) ?? [];
-    queueEqualDistribution(projectId, recipientAddresses, chain);
+    queueEqualDistribution(projectId, recipientAddresses, selectedChain);
   };
 
   return (

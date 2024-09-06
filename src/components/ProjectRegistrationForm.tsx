@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { useMultiStepContext } from '@/contexts/MultiStepContext';
-import { toast } from "sonner";
+import React, { useCallback, useState } from 'react';
 import { useContractInteraction } from '@/hooks/useContractInteraction';
 import { validateProjectDetails } from '@/utils/validateProjectDetails';
 import { ProjectDetails } from '@/types';
@@ -15,48 +13,46 @@ const fields = [
 ];
 
 export const ProjectRegistrationForm: React.FC = () => {
-  const { projectDetails, setProjectDetails, setCurrentStepIndex } = useMultiStepContext();
-  const { verifyProject: verifyProjectContract, isProjectVerified } = useContractInteraction();
-  const [fieldErrors, setFieldErrors] = useState<{[key: string]: string}>({});
+  const { verifyProject } = useContractInteraction();
+  const [ loading, setLoading ] = useState(false);
+  const [ fieldErrors, setFieldErrors ] = useState<{[key: string]: string}>({});
+  const [ projectDetails, setProjectDetails ] = useState<ProjectDetails>({
+    id: '',
+    name: '',
+    description: '',
+    website: '',
+    twitter: ''
+  }); 
 
-  useEffect(() => {
-    let isMounted = true;
-    if (isProjectVerified && isMounted) {
-      setCurrentStepIndex(3);
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [isProjectVerified, setCurrentStepIndex]);
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>  {
     const { name, value } = e.target;
     setProjectDetails({
       ...projectDetails,
       [name]: value
     });
-  }, [setProjectDetails, projectDetails]);
+  }
 
-  const handleNext = useCallback(async () => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
     const { isValid, fieldErrors } = validateProjectDetails(projectDetails);
     setFieldErrors(fieldErrors);
     if (isValid) {
-      verifyProjectContract(projectDetails.name, projectDetails.description, projectDetails.website, projectDetails.twitter);
-      toast.success("Verifying project!");
+      verifyProject(projectDetails.name, projectDetails.description, projectDetails.website, projectDetails.twitter);
+      setLoading(true);
     }
-    else {
-      console.error("Error verifying project");
-    }
-  }, [projectDetails, verifyProjectContract]);
+  }, [projectDetails, verifyProject]);
 
   return (
     <form className="space-y-6 text-white">
+      <h2 className="text-2xl font-bold mb-4">Verification Required</h2>
+      <p className="mb-4">Please verify your account/project to continue with the multi-send process. You MUST have ETH on Base Sepolia to verify your project.</p>
       {fields.map((slide, index) => (
         <div key={index}>
           <label htmlFor={slide.label.toLowerCase()} className="block text-sm font-medium text-gray-300 mb-2">
             {slide.label}
           </label>
           <input
+            disabled={loading}
             type="text"
             id={slide.label.toLowerCase()}
             name={slide.label.toLowerCase()}
@@ -74,8 +70,8 @@ export const ProjectRegistrationForm: React.FC = () => {
         </div>
       ))}
       <div className="flex justify-end mt-6">
-        <button onClick={handleNext} className="btn-primary">
-          Next
+        <button disabled={loading} onClick={handleSubmit} className="btn-primary">
+          Confirm
         </button>
       </div>
     </form>

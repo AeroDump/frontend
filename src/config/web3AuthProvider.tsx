@@ -4,7 +4,7 @@ import { CHAIN_NAMESPACES, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/b
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
-import { baseSepolia, Chain } from "viem/chains";
+import { baseSepolia, Chain, optimismSepolia } from "viem/chains";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query' 
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
 import { useEffect, useState, useMemo } from 'react';
@@ -73,9 +73,13 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
   }, []);
 
   const config = useMemo(() => createConfig({
-    chains: [baseSepolia],
+    chains: [
+      baseSepolia,
+      // optimismSepolia
+    ],
     transports: {
-      [baseSepolia.id]: http('https://sepolia.base.org'),
+      [baseSepolia.id]: http('https://base-sepolia-rpc.publicnode.com'),
+      // [optimismSepolia.id]: http('https://sepolia.optimism.io'),
     },
     connectors: [
       Web3AuthConnectorInstance([baseSepolia]),

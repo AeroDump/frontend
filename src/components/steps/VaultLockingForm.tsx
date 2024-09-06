@@ -1,16 +1,23 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMultiStepContext } from '@/contexts/MultiStepContext';
 import { useContractInteraction } from '@/hooks/useContractInteraction';
+import { useSwitchChain } from 'wagmi';
 
 export const VaultLockingForm: React.FC = () => {
+  const { switchChain } = useSwitchChain();
   const { projectId, allowance, approveUSDC, lockTokens, project } = useContractInteraction();
-  const { currency, chain, recipients } = useMultiStepContext();
+  const { recipients, currency, chain } = useMultiStepContext();
   const [showApproveButton, setShowApproveButton] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const [isLocking, setIsLocking] = useState(false);
   const [totalAmount, setTotalAmount] = useState<string>('0');
+
+  useEffect(() => {
+    console.log("chain", chain);
+    switchChain({ chainId: 11155420 })
+  }, []);
 
   useEffect(() => {
     const totalAmount = recipients.reduce((acc, recipient) => {
@@ -20,15 +27,26 @@ export const VaultLockingForm: React.FC = () => {
   }, [recipients]);
 
   useEffect(() => {
+    console.log('projectId');
+    console.log(projectId);
+    console.log('projectIdCrossChain');
+    console.log(projectIdCrossChain);
     console.log('project');
     console.log(project);
-  }, [project]);
+  }, [project, projectId, projectIdCrossChain]);
 
   useEffect(() => {
     const formattedAllowance = Number(allowance);
     const formattedTotalAmount = Number(totalAmount);
-    setShowApproveButton(formattedAllowance < formattedTotalAmount);
+    console.log('formattedAllowance', formattedAllowance);
+    console.log('formattedTotalAmount', formattedTotalAmount);
+    setShowApproveButton(formattedAllowance === formattedTotalAmount);
   }, [allowance, totalAmount]);
+
+  useEffect(() => {
+    console.log('Balance');
+    console.log('Allowance:', allowance);
+  }, [allowance]);
 
   const renderApproveButton = () => {
     if (showApproveButton) {
@@ -59,7 +77,7 @@ export const VaultLockingForm: React.FC = () => {
           setIsLocking(true);
         }}
         className="btn-primary"
-        disabled={isLocking}
+        disabled={isLocking || showApproveButton}
       >
         {isLocking ? 'Locking...' : 'Lock Vault'}
       </button>

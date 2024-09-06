@@ -35,7 +35,6 @@ export const RecipientForm: React.FC = () => {
 
   const handleFileUpload = (files: File[]) => {
     if (files.length === 0) return;
-
     const file = files[0];
     Papa.parse(file, {
       complete: (results) => {
@@ -120,13 +119,11 @@ export const RecipientForm: React.FC = () => {
         <p>Total Recipients: {recipients.length}</p>
         <p>Total Amount: {totalAmountFormatted} {currency.toUpperCase()} ({totalAmount.toString()} micro)</p>
       </div>
-
       <FileUpload
         onChange={handleFileUpload}
         heading="Upload CSV File"
         subheading="Drag and drop your CSV file here or click to browse"
       />
-      
       <div className="flex justify-between items-center">
         <b>
           Please use the provided csv template to upload recipients
@@ -136,7 +133,6 @@ export const RecipientForm: React.FC = () => {
           Download Template
         </button>
       </div>
-
       <div 
         ref={parentRef} 
         style={{ 
@@ -192,13 +188,11 @@ export const RecipientForm: React.FC = () => {
           </tfoot>
         </table>
       </div>
-      
       {noRecipientsError && (
         <div className="bg-red-500 text-white p-4 rounded-lg mb-4">
           {noRecipientsError}
         </div>
       )}
-      
       <div className="flex justify-end mt-6">
         <button onClick={handleNext} className="btn-primary">
           Next

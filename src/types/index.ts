@@ -21,8 +21,6 @@ export interface MultiStepContextType {
   setCurrency: (currency: string) => void;
   recipients: TokenTransferInfo[];
   setRecipients: (recipients: TokenTransferInfo[]) => void;
-  projectDetails: ProjectDetails;
-  setProjectDetails: (details: ProjectDetails) => void;
   isProjectRegistered: boolean;
   setIsProjectRegistered: (isRegistered: boolean) => void;
   isVaultLocked: boolean;

@@ -39,6 +39,7 @@ export const ChainCurrencySelectionForm: React.FC = () => {
 					>
 						<option value="">Select a chain</option>
 						<option value={84532}>Base Sepolia</option>
+            <option value={11155420}>Optimism Sepolia</option>
 					</select>
 					{fieldErrors.chain && <p className="text-red-500 text-xs mt-1">{fieldErrors.chain}</p>}
 				</div>
