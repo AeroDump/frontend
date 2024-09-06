@@ -29,11 +29,9 @@ export const VaultLockingForm: React.FC = () => {
   useEffect(() => {
     console.log('projectId');
     console.log(projectId);
-    console.log('projectIdCrossChain');
-    console.log(projectIdCrossChain);
     console.log('project');
     console.log(project);
-  }, [project, projectId, projectIdCrossChain]);
+  }, [project, projectId]);
 
   useEffect(() => {
     const formattedAllowance = Number(allowance);

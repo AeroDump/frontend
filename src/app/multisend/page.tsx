@@ -23,7 +23,7 @@ function MultiSend() {
   useEffect(() => {
     console.log("isProjectVerified", isProjectVerified);
     console.log("chain", chain?.id);
-    if (isProjectVerified !== undefined && chain?.id !== undefined) {
+    if (isProjectVerified !== undefined && chain?.id !== undefined) { //update once new contracts save projectId
       setIsLoading(false);
     }
   }, [isProjectVerified, chain]);

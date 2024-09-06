@@ -98,7 +98,4 @@ export const useContractInteraction = () => {
     queueEqualDistribution
   };
 };
-function useWaitForTransaction(arg0: { hash: any; }): { isLoading: any; } {
-  throw new Error('Function not implemented.');
-}
 
