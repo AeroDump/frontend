@@ -16,7 +16,8 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
 
   const Web3AuthConnectorInstance = useMemo(() => {
     return (chains: Chain[]) => {
-      const clientId = "BN3jcdNWn5MtAf41YMIuOM9Dq2a_NY3po3CKrxpp4NwY485PEeOe4rkF0071zs1sA5f7xRAa6fzeotrWFmDP5R8";
+ 
+      const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!
 
       const chainConfig = {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
