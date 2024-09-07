@@ -32,12 +32,12 @@ export const useContractInteraction = () => {
     args: [address as Address],
   });
 
-  const {data: projectIdCrossChain } = useReadContract({
+  const {data: projectIdCrossChain} = useReadContract({
     ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
     functionName: 'getProjectOwnerToId',
     args: [address as Address],
   });
-
+  
   const {data: allowance} = useReadContract({
     ...OPTIMISM_SEPOLIA_USDC_CONTRACT,
     functionName: 'allowance',
@@ -93,6 +93,7 @@ export const useContractInteraction = () => {
     verifyProject,
     isProjectVerified,
     projectId: projectId ? projectId.toString() :  projectIdCrossChain ? projectIdCrossChain.toString() : undefined,
+    projectIdCrossChain,
     allowance,
     project,
     queueEqualDistribution

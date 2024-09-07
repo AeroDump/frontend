@@ -16,17 +16,14 @@ const MultiStepForm = dynamic(() => import('@/components/MultistepForm').then((m
 });
 
 function MultiSend() {
-  const { isProjectVerified } = useContractInteraction();
+  const { isProjectVerified, } = useContractInteraction();
   const [isLoading, setIsLoading] = useState(true);
-  const { chain } = useAccount();
  
   useEffect(() => {
-    console.log("isProjectVerified", isProjectVerified);
-    console.log("chain", chain?.id);
-    if (isProjectVerified !== undefined && chain?.id !== undefined) { //update once new contracts save projectId
+    if (isProjectVerified) { 
       setIsLoading(false);
     }
-  }, [isProjectVerified, chain]);
+  }, [isProjectVerified]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -36,7 +33,7 @@ function MultiSend() {
     <AnimatedPage>
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 py-8">
         <Heading text="Multi-Send Crypto" />
-        {isProjectVerified || chain?.id !== 84532 ? (
+        {isProjectVerified ? (
           <MultiStepProvider>
             <MultiStepForm />
           </MultiStepProvider>

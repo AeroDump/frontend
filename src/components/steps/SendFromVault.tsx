@@ -6,10 +6,9 @@ import { useContractInteraction } from '@/hooks/useContractInteraction';
 import { Address } from 'viem';
 
 export const SendFromVault: React.FC = () => {
-  const { recipients } = useMultiStepContext();
+  const { recipients, chain} = useMultiStepContext();
   const { projectId, queueEqualDistribution} = useContractInteraction();
   const [isSending, setIsSending] = useState(false);
-  const [selectedChain, setSelectedChain] = useState<number>(84532);
 
   const handleSendFromVault = () => {
     setIsSending(true);
@@ -18,14 +17,14 @@ export const SendFromVault: React.FC = () => {
       return;
     }
     const recipientAddresses = recipients?.map((recipient) => recipient.walletAddress) ?? [];
-    queueEqualDistribution(projectId, recipientAddresses, selectedChain);
+    queueEqualDistribution(projectId, recipientAddresses, chain);
   };
 
   return (
     <div className="text-white">
       <h2 className="text-2xl font-semibold mb-4">Send Tokens from Vault</h2>
       <p className="mb-4">Click the button below to queue the airdrop for equal distribution to all recipients.</p>
-      <button 
+      <button
         onClick={handleSendFromVault} 
         className={`btn-primary ${isSending ? 'opacity-50' : ''}`}
         disabled={isSending}

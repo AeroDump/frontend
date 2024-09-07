@@ -1,7 +1,7 @@
 
-const CONTRACT_ADDRESS_ATTESTATIONS_BASE_SEPOLIA: `0x${string}` = '0x33E21B633FE6f91bAba56d5B08591f572b9Cee73';
+const CONTRACT_ADDRESS_ATTESTATIONS_BASE_SEPOLIA: `0x${string}` = '0x4f395890169559FdEbE3f6DA8822E86aA7eF390f';
 
-const CONTRACT_ADDRESS_OFTADAPTER_OPTIMISM_SEPOLIA: `0x${string}` = '0xB2315a96B687E1dce36cc87bc0050D8E65775D22';
+const CONTRACT_ADDRESS_OFTADAPTER_OPTIMISM_SEPOLIA: `0x${string}` = '0xe734076F9B3C4Af1920e92B218B4C3691a1b02d7';
 
 const CONTRACT_ADDRESS_OPTIMISM_SEPOLIA_USDC: `0x${string}` = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
 
@@ -180,6 +180,25 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
       "anonymous": false,
       "inputs": [
           {
+              "indexed": false,
+              "internalType": "address",
+              "name": "projectOwner",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          }
+      ],
+      "name": "AeroDumpAttestations__TokensLocked",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
               "indexed": true,
               "internalType": "address",
               "name": "previousOwner",
@@ -213,6 +232,19 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
       ],
       "name": "PeerSet",
       "type": "event"
+  },
+  {
+      "inputs": [],
+      "name": "AMOUNT",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
       "inputs": [
@@ -322,8 +354,14 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
       "type": "function"
   },
   {
-      "inputs": [],
-      "name": "getIsTokensLoked",
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+          }
+      ],
+      "name": "getIsTokensLocked",
       "outputs": [
           {
               "internalType": "bool",
@@ -597,29 +635,6 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
       "type": "function"
   },
   {
-      "inputs": [
-          {
-              "internalType": "uint256",
-              "name": "projectId",
-              "type": "uint256"
-          },
-          {
-              "internalType": "address",
-              "name": "tokenAddress",
-              "type": "address"
-          },
-          {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          }
-      ],
-      "name": "recordLockTokens",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  },
-  {
       "inputs": [],
       "name": "renounceOwnership",
       "outputs": [],
@@ -828,19 +843,6 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
   },
   {
     "type": "function",
-    "name": "PROJECTID",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "SEND",
     "inputs": [],
     "outputs": [
@@ -868,19 +870,6 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
   {
     "type": "function",
     "name": "TOKEN_ADDRESS",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "USER",
     "inputs": [],
     "outputs": [
       {
@@ -939,6 +928,19 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
       }
     ],
     "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "attestationsEid",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -1002,6 +1004,19 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
         "name": "",
         "type": "address",
         "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "composerEid",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32",
+        "internalType": "uint32"
       }
     ],
     "stateMutability": "view"
@@ -1528,7 +1543,7 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "nonpayable"
+    "stateMutability": "payable"
   },
   {
     "type": "function",
@@ -2327,12 +2342,38 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
   },
   {
     "type": "function",
+    "name": "setAttestationsEid",
+    "inputs": [
+      {
+        "name": "_dstEid",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setComposer",
     "inputs": [
       {
         "name": "_composer",
         "type": "address",
         "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setComposerEid",
+    "inputs": [
+      {
+        "name": "_dstEid",
+        "type": "uint32",
+        "internalType": "uint32"
       }
     ],
     "outputs": [],
@@ -2510,6 +2551,91 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "AerodumpOFTAdapter__AirdropQueued",
+    "inputs": [
+      {
+        "name": "projectId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "recipients",
+        "type": "address[]",
+        "indexed": false,
+        "internalType": "address[]"
+      },
+      {
+        "name": "dstChainId",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AerodumpOFTAdapter__AirdropQueuedWithUnequalCSVDistribution",
+    "inputs": [
+      {
+        "name": "recipients",
+        "type": "tuple[]",
+        "indexed": false,
+        "internalType": "struct AerodumpOFTAdapter.Recipient[]",
+        "components": [
+          {
+            "name": "projectId",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "dstChainId",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "recipient",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "amountToSend",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "AerodumpOFTAdapter__CheckUpkeep",
+    "inputs": [
+      {
+        "name": "upkeepNeeded",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      },
+      {
+        "name": "equalDistributionQueueLength",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "unequalDistributionCSVQueueLength",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
   },
   {
     "type": "event",
@@ -2765,6 +2891,17 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
   },
   {
     "type": "error",
+    "name": "InvalidOptionType",
+    "inputs": [
+      {
+        "name": "optionType",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "InvalidOptions",
     "inputs": [
       {
@@ -2852,6 +2989,22 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
         "name": "account",
         "type": "address",
         "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SafeCastOverflowedUintDowncast",
+    "inputs": [
+      {
+        "name": "bits",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ]
   },

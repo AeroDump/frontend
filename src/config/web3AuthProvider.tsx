@@ -75,11 +75,11 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
   const config = useMemo(() => createConfig({
     chains: [
       baseSepolia,
-      // optimismSepolia
+      optimismSepolia
     ],
     transports: {
       [baseSepolia.id]: http('https://base-sepolia-rpc.publicnode.com'),
-      // [optimismSepolia.id]: http('https://sepolia.optimism.io'),
+      [optimismSepolia.id]: http('https://sepolia.optimism.io'),
     },
     connectors: [
       Web3AuthConnectorInstance([baseSepolia]),
