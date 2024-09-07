@@ -2,37 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-.menu-bar,  .menu-overlay {
-  top: 0;
-  left: 0;
-  width: 100vw;
-  /* padding: 1.75em; */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-  @apply text-neutral-800 h-fit bg-[#F8F6E3] py-[0.5rem] px-4 pr-10 md:px-20 lg:px-36;
+/* Base styles for the entire app */
+body {
+  @apply bg-black text-white min-h-screen;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
-#close {
-  @apply text-neutral-700 cursor-pointer text-2xl mr-5 lg:mr-28 z-[999];
+.menu-bar,  .menu-overlay {
+  @apply text-white bg-black py-4 px-6 md:px-20 lg:px-36;
+}
+
+/* Navbar link styles */
+.menu-bar a {
+  @apply text-white font-medium text-lg hover:text-purple-300 transition-colors duration-200 px-4 py-2 rounded-md;
 }
 
 #open {
-  @apply cursor-pointer text-2xl text-neutral-700;
+  @apply cursor-pointer text-2xl text-white hover:text-purple-300 transition-colors duration-200;
+}
+
+#close {
+  @apply text-white cursor-pointer text-2xl mr-5 lg:mr-28 z-[999];
 }
 
 .menu-bar a,
-.menu-open p {
-  /* color: #000; */
-  cursor: pointer;
-  @apply text-neutral-800;
+.menu-open p,
+.menu-close p {
+  @apply text-white cursor-pointer;
 }
 
 .menu-close p {
   color: #000;
   cursor: pointer;
-  @apply text-neutral-800;
+  @apply text-white;
 }
 
 .menu-overlay {
@@ -42,7 +47,7 @@
   width: 100vw;
   height: 100vh;
   padding: 2em;
-  background: #F8F6E3;
+  background: black;
   z-index: 999;
   display: flex;
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
@@ -57,6 +62,7 @@
   padding: 2em;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .menu-close-icon {
@@ -100,13 +106,7 @@
 }
 
 .menu-link-item-holder a {
-  color: #000; 
-  font-size: 80px;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 85%;
-  text-overflow: wrap;
-  @apply text-neutral-800;
+  @apply text-white hover:text-purple-300 transition-colors duration-200;
 }
 
 .menu-info {
@@ -135,4 +135,75 @@
   .menu-preview{
       display: none;
   }
-} 
+}
+
+/* Add this new class for components that need the grid background */
+.grid-background {
+  position: relative;
+}
+
+.grid-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content is above the grid */
+.grid-background > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* New custom utility classes */
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600;
+  }
+
+  .btn-primary {
+    @apply bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-200 text-sm py-2 px-4 rounded-xl shadow-md disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-600 text-white hover:bg-gray-700 transition-colors duration-200 text-sm py-2 px-4 rounded-xl shadow-md;
+  }
+
+  .input-primary {
+    @apply w-full p-2 bg-gray-700 border border-gray-600 text-white focus:border-gray-500 rounded-xl;
+  }
+
+  .transition-all {
+    transition-property: transform, opacity;
+    will-change: transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .shadow-lg {
+    --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+
+  .hover\:shadow-xl:hover {
+    --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+
+  .input-error {
+    @apply border-2 border-red-500 !important;
+  }
+  
+}
