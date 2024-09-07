@@ -1,6 +1,6 @@
 "use client"
 import dynamic from 'next/dynamic';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Heading, AnimatedPage } from "@/components/animations";
 import { auth } from "@/components/auth";
 import { MultiStepProvider } from '@/contexts/MultiStepContext';
@@ -16,30 +16,30 @@ const MultiStepForm = dynamic(() => import('@/components/MultistepForm').then((m
 });
 
 function MultiSend() {
-  const { isProjectVerified, } = useContractInteraction();
-  const [isLoading, setIsLoading] = useState(true);
- 
-  useEffect(() => {
-    if (isProjectVerified) { 
-      setIsLoading(false);
-    }
-  }, [isProjectVerified]);
+  const { isProjectVerified, isVerifiedUser} = useContractInteraction();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+  },[isProjectVerified, isVerifiedUser])
+
+  const renderForm = () => {
+    const isVerified = isProjectVerified || isVerifiedUser;
+    if (isVerified) {
+      return (
+        <MultiStepProvider>
+          <MultiStepForm />
+        </MultiStepProvider>
+      )
+    }
+    return (
+      <ProjectRegistrationForm />
+    )
   }
 
   return (
     <AnimatedPage>
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 py-8">
         <Heading text="Multi-Send Crypto" />
-        {isProjectVerified ? (
-          <MultiStepProvider>
-            <MultiStepForm />
-          </MultiStepProvider>
-        ) : (
-          <ProjectRegistrationForm />
-        )}
+        {renderForm()}
       </div>
     </AnimatedPage>
   )

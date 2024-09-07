@@ -26,6 +26,12 @@ export const useContractInteraction = () => {
     args: [address as Address],
   });
 
+  const {data: isVerifiedUser} = useReadContract({
+    ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
+    functionName: 'getProjectOwnerToId',
+    args: [address as Address],
+  });
+
   const {data: projectId} = useReadContract({
     ...ATTESTATIONS_CONTRACT_BASE_SEPOLIA,
     functionName: 'getProjectId',
@@ -59,12 +65,13 @@ export const useContractInteraction = () => {
     });
   };
 
-  const lockTokens = (projectId: string, amount: bigint, chain: number) => {
+  const lockTokens = (projectId: number, amount: bigint, chain: number) => {
     console.log('lockTokens', projectId, amount, chain);
     return writeContract({
       ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
       functionName: 'lockTokens',
       args: [projectId, amount, amount, chain],
+      value: parseEther('0.004'),
     });
   };
 
@@ -74,7 +81,7 @@ export const useContractInteraction = () => {
       ...ATTESTATIONS_CONTRACT_BASE_SEPOLIA,
       functionName: 'verifyProject',
       args: [name, description, website, twitter],
-      value: parseEther('0.0008'),
+      value: parseEther('0.004'),
     });
   };
 
@@ -92,11 +99,12 @@ export const useContractInteraction = () => {
     lockTokens,
     verifyProject,
     isProjectVerified,
-    projectId: projectId ? projectId.toString() :  projectIdCrossChain ? projectIdCrossChain.toString() : undefined,
+    isVerifiedUser,
+    projectId,
     projectIdCrossChain,
     allowance,
     project,
-    queueEqualDistribution
+    queueEqualDistribution,
   };
 };
 

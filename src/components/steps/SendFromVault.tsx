@@ -7,17 +7,17 @@ import { Address } from 'viem';
 
 export const SendFromVault: React.FC = () => {
   const { recipients, chain} = useMultiStepContext();
-  const { projectId, queueEqualDistribution} = useContractInteraction();
+  const { projectIdCrossChain, queueEqualDistribution} = useContractInteraction();
   const [isSending, setIsSending] = useState(false);
 
   const handleSendFromVault = () => {
     setIsSending(true);
-    if (!projectId) {
+    if (!projectIdCrossChain) {
       console.error('Project ID is not set');
       return;
     }
     const recipientAddresses = recipients?.map((recipient) => recipient.walletAddress) ?? [];
-    queueEqualDistribution(projectId, recipientAddresses, chain);
+    queueEqualDistribution(projectIdCrossChain.toString(), recipientAddresses, chain);
   };
 
   return (
