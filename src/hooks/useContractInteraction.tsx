@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useEffect } from 'react';
 
 export const useContractInteraction = () => {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const { data: hash, writeContract, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
@@ -23,6 +23,12 @@ export const useContractInteraction = () => {
   const {data: isProjectVerified} = useReadContract({
     ...ATTESTATIONS_CONTRACT_BASE_SEPOLIA,
     functionName: 'getIsProjectVerified',
+    args: [address as Address],
+  });
+
+  const {data: isVerifiedUser} = useReadContract({
+    ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
+    functionName: 'getProjectOwnerToId',
     args: [address as Address],
   });
 
@@ -44,10 +50,10 @@ export const useContractInteraction = () => {
     args: [address as Address, OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA.address],
   });
 
-  const {data: project} = useReadContract({
+  const {data: lockedTokens} = useReadContract({
     ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
-    functionName: 'getProjectDetailsByAddress',
-    args: [address as Address],
+    functionName: 'getLockedTokens',
+    args: [Number(projectIdCrossChain)],
   });
 
   const approveUSDC = (amount: bigint) => {
@@ -59,12 +65,13 @@ export const useContractInteraction = () => {
     });
   };
 
-  const lockTokens = (projectId: string, amount: bigint, chain: number) => {
+  const lockTokens = (projectId: number, amount: bigint, chain: number) => {
     console.log('lockTokens', projectId, amount, chain);
     return writeContract({
       ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
       functionName: 'lockTokens',
       args: [projectId, amount, amount, chain],
+      value: parseEther('0.004'),
     });
   };
 
@@ -74,7 +81,7 @@ export const useContractInteraction = () => {
       ...ATTESTATIONS_CONTRACT_BASE_SEPOLIA,
       functionName: 'verifyProject',
       args: [name, description, website, twitter],
-      value: parseEther('0.0008'),
+      value: parseEther('0.004'),
     });
   };
 
@@ -92,11 +99,13 @@ export const useContractInteraction = () => {
     lockTokens,
     verifyProject,
     isProjectVerified,
-    projectId: projectId ? projectId.toString() :  projectIdCrossChain ? projectIdCrossChain.toString() : undefined,
+    isVerifiedUser,
+    projectId,
     projectIdCrossChain,
     allowance,
-    project,
-    queueEqualDistribution
+    lockedTokens,
+    queueEqualDistribution,
+    chain
   };
 };
 

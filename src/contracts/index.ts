@@ -1,9 +1,9 @@
 
-const CONTRACT_ADDRESS_ATTESTATIONS_BASE_SEPOLIA: `0x${string}` = '0x4f395890169559FdEbE3f6DA8822E86aA7eF390f';
+const CONTRACT_ADDRESS_ATTESTATIONS_BASE_SEPOLIA: `0x${string}` = '0xbCEcCe5c051245e6677E510b28F8FbEe623D8Ee3';
 
-const CONTRACT_ADDRESS_OFTADAPTER_OPTIMISM_SEPOLIA: `0x${string}` = '0xe734076F9B3C4Af1920e92B218B4C3691a1b02d7';
+const CONTRACT_ADDRESS_OFTADAPTER_OPTIMISM_SEPOLIA: `0x${string}` = '0x2aEd03C88287C54D1E2710703020bD783cb051B9';
 
-const CONTRACT_ADDRESS_OPTIMISM_SEPOLIA_USDC: `0x${string}` = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+const CONTRACT_ADDRESS_OPTIMISM_SEPOLIA_USDC: `0x${string}` = '0x5fd84259d66Cd46123540766Be93DFE6D43130D7';
 
 const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
   {
@@ -1205,6 +1205,25 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
         "name": "",
         "type": "bool",
         "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getLockedTokens",
+    "inputs": [
+      {
+        "name": "projectId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
