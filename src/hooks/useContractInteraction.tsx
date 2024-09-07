@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useEffect } from 'react';
 
 export const useContractInteraction = () => {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const { data: hash, writeContract, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
@@ -50,10 +50,10 @@ export const useContractInteraction = () => {
     args: [address as Address, OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA.address],
   });
 
-  const {data: project} = useReadContract({
+  const {data: lockedTokens} = useReadContract({
     ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
-    functionName: 'getProjectDetailsByAddress',
-    args: [address as Address],
+    functionName: 'getLockedTokens',
+    args: [Number(projectIdCrossChain)],
   });
 
   const approveUSDC = (amount: bigint) => {
@@ -103,8 +103,9 @@ export const useContractInteraction = () => {
     projectId,
     projectIdCrossChain,
     allowance,
-    project,
+    lockedTokens,
     queueEqualDistribution,
+    chain
   };
 };
 

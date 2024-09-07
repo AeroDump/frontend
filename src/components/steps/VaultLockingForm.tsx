@@ -7,8 +7,8 @@ import { useSwitchChain } from 'wagmi';
 
 export const VaultLockingForm: React.FC = () => {
   const { switchChain } = useSwitchChain();
-  const { projectIdCrossChain, allowance, approveUSDC, lockTokens, project } = useContractInteraction();
-  const { recipients, currency, chain } = useMultiStepContext();
+  const { projectIdCrossChain, allowance, approveUSDC, lockTokens, lockedTokens, chain: connectedChain } = useContractInteraction();
+  const { recipients, currency, chain, setCurrentStepIndex } = useMultiStepContext();
   const [showApproveButton, setShowApproveButton] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const [isLocking, setIsLocking] = useState(false);
@@ -32,8 +32,13 @@ export const VaultLockingForm: React.FC = () => {
   }, [allowance, totalAmount]);
 
   useEffect(() => {
-    console.log(project)
-  }, [project])
+    console.log("lockedTokens", lockedTokens)
+    const formattedlockedTokens = Number(lockedTokens);
+    const formattedTotalAmount = Number(totalAmount);
+    if (formattedlockedTokens >= formattedTotalAmount) {
+      setCurrentStepIndex(3);
+    }
+  }, [lockedTokens, totalAmount])
 
   const renderApproveButton = () => {
     if (showApproveButton) {
@@ -82,7 +87,8 @@ export const VaultLockingForm: React.FC = () => {
         className="w-full p-2 mb-4 bg-gray-800 border border-gray-700 rounded-md text-white"
       />
       <p className="mb-4">Currency: <span className="text-purple-400">{currency}</span></p>
-      <p className="mb-4">Chain: <span className="text-purple-400">{chain}</span></p>
+      <p className="mb-4">From Chain: <span className="text-purple-400">{connectedChain?.name} ({connectedChain?.id})</span></p>
+      <p className="mb-4">To Chain: <span className="text-purple-400">Base Sepolia ({chain})</span></p>
       <p className="mb-4">Project ID: <span className="text-purple-400">{projectIdCrossChain ? projectIdCrossChain.toString() : 'Not available'}</span></p>
       <div className="flex justify-end mt-6">
         {renderApproveButton()}

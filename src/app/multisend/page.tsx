@@ -16,13 +16,13 @@ const MultiStepForm = dynamic(() => import('@/components/MultistepForm').then((m
 });
 
 function MultiSend() {
-  const { isProjectVerified, isVerifiedUser} = useContractInteraction();
+  const { isProjectVerified, isVerifiedUser, chain} = useContractInteraction();
 
   useEffect(() => {
   },[isProjectVerified, isVerifiedUser])
 
   const renderForm = () => {
-    const isVerified = isProjectVerified || isVerifiedUser;
+    const isVerified = isProjectVerified || chain?.id === 11155420; //do this for now to prevent rerender
     if (isVerified) {
       return (
         <MultiStepProvider>
