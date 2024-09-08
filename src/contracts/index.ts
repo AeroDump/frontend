@@ -1,7 +1,7 @@
 
-const CONTRACT_ADDRESS_ATTESTATIONS_BASE_SEPOLIA: `0x${string}` = '0xbCEcCe5c051245e6677E510b28F8FbEe623D8Ee3';
+const CONTRACT_ADDRESS_ATTESTATIONS_BASE_SEPOLIA: `0x${string}` = '0xCc4f38aAB19b134Aa3bBcb36627384F31689eaEb';
 
-const CONTRACT_ADDRESS_OFTADAPTER_OPTIMISM_SEPOLIA: `0x${string}` = '0x2aEd03C88287C54D1E2710703020bD783cb051B9';
+const CONTRACT_ADDRESS_OFTADAPTER_OPTIMISM_SEPOLIA: `0x${string}` = '0xFc48EC99242419530763122891DcE347b0d92D43';
 
 const CONTRACT_ADDRESS_OPTIMISM_SEPOLIA_USDC: `0x${string}` = '0x5fd84259d66Cd46123540766Be93DFE6D43130D7';
 
@@ -284,7 +284,7 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
   },
   {
       "inputs": [],
-      "name": "composerEid",
+      "name": "composerFirstEid",
       "outputs": [
           {
               "internalType": "uint32",
@@ -495,6 +495,39 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
   {
       "inputs": [
           {
+              "internalType": "address",
+              "name": "_oApp",
+              "type": "address"
+          },
+          {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+          },
+          {
+              "internalType": "bytes",
+              "name": "payload",
+              "type": "bytes"
+          },
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          },
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "name": "lzCompose",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
               "components": [
                   {
                       "internalType": "uint32",
@@ -647,27 +680,9 @@ const CONTRACT_ABI_ATTESTATIONS_BASE_SEPOLIA: any[] = [
               "internalType": "uint32",
               "name": "_dstEid",
               "type": "uint32"
-          },
-          {
-              "internalType": "string",
-              "name": "_message",
-              "type": "string"
           }
       ],
-      "name": "send",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "uint32",
-              "name": "_dstEid",
-              "type": "uint32"
-          }
-      ],
-      "name": "setComposerEid",
+      "name": "setComposerFirstEid",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1655,6 +1670,25 @@ const CONTRACT_ABI_OFTADAPTER_OPTIMISM_SEPOLIA: any[] = [
               "internalType": "uint256",
               "name": "projectId",
               "type": "uint256"
+          }
+      ],
+      "name": "getAmountLocked",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
           }
       ],
       "name": "getAmountLocked",

@@ -205,5 +205,20 @@ body {
   .input-error {
     @apply border-2 border-red-500 !important;
   }
-  
+
+  .stat-highlight {
+    @apply text-3xl font-bold text-purple-400;
+  }
+
+  .stat-label {
+    @apply text-sm text-gray-400 uppercase tracking-wide;
+  }
+
+  .stat-container {
+    @apply bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transition-all flex justify-around items-center;
+  }
+
+  .important-stat {
+    @apply flex flex-col items-center justify-center space-y-2;
+  }
 }
