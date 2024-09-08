@@ -15,7 +15,7 @@ const Web3AuthProvider = dynamic(() => import("@/config/web3AuthProvider"), {
   ssr: false,
 });
 
-const Navbar = dynamic(() => import("@/components/Navbar"), {
+const Navbar = dynamic(() => import("@/components/navbar"), {
   loading: () => <div>Loading...</div>,
 });
 
