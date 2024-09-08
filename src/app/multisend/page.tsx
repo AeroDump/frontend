@@ -22,8 +22,8 @@ function MultiSend() {
   },[isProjectVerified, isVerifiedUser])
 
   const renderForm = () => {
-    const isVerified = isProjectVerified || chain?.id === 11155420; //do this for now to prevent rerender
-    if (isVerified) {
+    // const isVerified = isProjectVerified || chain?.id === 11155420; //do this for now to prevent rerender
+    if (isProjectVerified || chain?.id === 11155420) {
       return (
         <MultiStepProvider>
           <MultiStepForm />

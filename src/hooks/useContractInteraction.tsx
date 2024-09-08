@@ -43,6 +43,7 @@ export const useContractInteraction = () => {
     functionName: 'getProjectOwnerToId',
     args: [address as Address],
   });
+
   
   const {data: allowance} = useReadContract({
     ...OPTIMISM_SEPOLIA_USDC_CONTRACT,
@@ -53,6 +54,12 @@ export const useContractInteraction = () => {
   const {data: lockedTokens} = useReadContract({
     ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
     functionName: 'getAmountLocked',
+    args: [address as Address],
+  });
+
+  const {data: projectDetails} = useReadContract({
+    ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
+    functionName: 'getProjectDetailsByAddress',
     args: [address as Address],
   });
 
@@ -101,6 +108,7 @@ export const useContractInteraction = () => {
     isProjectVerified,
     isVerifiedUser,
     projectId,
+    projectDetails,
     projectIdCrossChain,
     allowance,
     lockedTokens,
