@@ -43,8 +43,8 @@ export const SendFromVault: React.FC = () => {
           <span className="stat-label">Recipients</span>
         </div>
         <div className="important-stat">
-          <span className="stat-highlight">${totalAmount}</span>
-          <span className="stat-label">Total Amount</span>
+          <span className="stat-highlight">{totalAmount}</span>
+          <span className="stat-label">Total Amount (micro usdc)</span>
         </div>
       </div>
       <div className="flex justify-end">
