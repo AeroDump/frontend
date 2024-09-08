@@ -4,7 +4,7 @@ import { CHAIN_NAMESPACES, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/b
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
-import { baseSepolia, Chain, optimismSepolia } from "viem/chains";
+import { baseSepolia, Chain, optimismSepolia, arbitrumSepolia, fantomTestnet, bscTestnet, avalancheFuji, polygonMumbai } from "viem/chains";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query' 
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
 import { useEffect, useState, useMemo } from 'react';
@@ -76,11 +76,17 @@ export default function Web3AuthProvider({ children }: { children: React.ReactNo
   const config = useMemo(() => createConfig({
     chains: [
       baseSepolia,
-      optimismSepolia
+      optimismSepolia, 
+      arbitrumSepolia, fantomTestnet, bscTestnet, avalancheFuji, polygonMumbai
     ],
     transports: {
       [baseSepolia.id]: http('https://base-sepolia-rpc.publicnode.com'),
       [optimismSepolia.id]: http('https://sepolia.optimism.io'),
+      [arbitrumSepolia.id]: http('https://arbitrum-sepolia.publicnode.com'),
+      [fantomTestnet.id]: http('https://rpc.ankr.com/fantom_testnet'),
+      [bscTestnet.id]: http('https://bsc-testnet.publicnode.com'),
+      [avalancheFuji.id]: http('https://avalanche-fuji.publicnode.com'),
+      [polygonMumbai.id]: http('https://polygon-mumbai.publicnode.com'),
     },
     connectors: [
       Web3AuthConnectorInstance([baseSepolia]),
