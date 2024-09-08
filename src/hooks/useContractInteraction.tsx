@@ -5,19 +5,19 @@ import { toast } from "sonner";
 import { useEffect } from 'react';
 
 export const useContractInteraction = () => {
-  const { address, chain } = useAccount();
+  const { address, chain, isConnected } = useAccount();
   const { data: hash, writeContract, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
   useEffect(() => {
-    if (isConfirming) {
-      toast.info(`Transaction is confirming... ${hash}`);
-    } else if (isConfirmed) {
+    if (isConfirmed) {
       toast.success(`Transaction confirmed successfully! ${hash}`);
     } else if (error) {
       console.log('error', error);
       toast.error(`Error: ${error.message} ${hash}`);
-    }
+    } else if (isConfirming) {
+      toast.info(`Transaction is confirming... ${hash}`);
+    } 
   }, [isConfirming, isConfirmed, error, hash]);
 
   const {data: isProjectVerified} = useReadContract({
@@ -52,8 +52,8 @@ export const useContractInteraction = () => {
 
   const {data: lockedTokens} = useReadContract({
     ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
-    functionName: 'getLockedTokens',
-    args: [Number(projectIdCrossChain)],
+    functionName: 'getAmountLocked',
+    args: [projectIdCrossChain],
   });
 
   const approveUSDC = (amount: bigint) => {
@@ -105,7 +105,9 @@ export const useContractInteraction = () => {
     allowance,
     lockedTokens,
     queueEqualDistribution,
-    chain
+    chain,
+    address,
+    isConnected,
   };
 };
 

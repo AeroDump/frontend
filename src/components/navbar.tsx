@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { AnimatePresence } from "framer-motion";
 import { MenuOverlay, AnimatedMenuLink } from "./animations";
+import { useContractInteraction } from "@/hooks/useContractInteraction";
 
 type MenuLink = {
   label: string;
@@ -19,7 +20,7 @@ const menuLinks: MenuLink[] = [
 
 const NavBar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isConnected } = useAccount();
+  const { isConnected, chain } = useContractInteraction();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -42,7 +43,7 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      <MenuBar toggleMenu={toggleMenu} handleLinkClick={handleLinkClick} />
+      <MenuBar toggleMenu={toggleMenu} handleLinkClick={handleLinkClick} chain={chain} />
       <AnimatePresence>
         {isMenuOpen && <MenuOverlay toggleMenu={toggleMenu} handleLinkClick={handleLinkClick} />}
       </AnimatePresence>
@@ -53,10 +54,14 @@ const NavBar: React.FC = () => {
 const MenuBar: React.FC<{ 
   toggleMenu: () => void;
   handleLinkClick: (path: string, requiresAuth: boolean) => void;
-}> = ({ toggleMenu, handleLinkClick }) => (
+  chain: any;
+}> = ({ toggleMenu, handleLinkClick, chain }) => (
   <div className="menu-bar flex justify-between items-center">
     <div className="menu-logo">
       <Link href="/" className="text-xl sm:text-2xl font-bold">Aerodump</Link>
+    </div>
+    <div className="text-purple-600">
+      Connected to: {chain?.name}
     </div>
     <div className="hidden lg:flex space-x-6">
       {menuLinks.map((link, index) => (

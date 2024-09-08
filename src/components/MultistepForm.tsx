@@ -9,12 +9,14 @@ import { useMultiStepContext } from '@/contexts/MultiStepContext';
 import { Progress } from './ui/progress';
 import { Step } from '@/types';
 import { SendFromVault } from './steps/SendFromVault';
+import { CompletionStep } from './steps/CompletionStep';
 
 const steps: Step[] = [
   { key: 'chainCurrency', component: ChainCurrencySelectionForm, label: 'Select Chain and Currency' },
   { key: 'recipients', component: RecipientForm, label: 'Add Recipients' },
   { key: 'vault', component: VaultLockingForm, label: 'Lock Vault' },
   { key: 'send', component: SendFromVault, label: 'Send from Vault' },
+  { key: 'confirm', component: CompletionStep, label: 'Completion' },
 ];
 
 export const MultiStepForm = React.memo(() => {
