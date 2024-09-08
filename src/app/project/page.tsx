@@ -1,20 +1,12 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useContractInteraction } from '@/hooks/useContractInteraction'
-import { useAccount } from 'wagmi';
 import { Heading } from '@/components/animations';
 
 
-const vault = () => {
-    const { address, chain, isConnected } = useAccount();
+const Project = () => {
 
     const { lockedTokens, isProjectVerified, projectDetails } = useContractInteraction()
-
-    useEffect(() => {
-        console.log("locked Tokens", lockedTokens)
-        console.log("address", address)
-        console.log("project Details", projectDetails)
-    }, [lockedTokens])
 
     return (
 
@@ -28,4 +20,4 @@ const vault = () => {
     )
 }
 
-export default vault
+export default Project
