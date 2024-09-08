@@ -1,16 +1,15 @@
 "use client";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { useDisconnect, useAccount, useBalance } from "wagmi";
 import { auth } from "@/components/auth";
 import { Heading, FadeInAnimation } from "@/components/animations";
 import { Chain } from "viem";
+import { useContractInteraction } from "@/hooks/useContractInteraction";
 
 function Dashboard() {
-  const { address, chain } = useAccount();
+  const { address, chain } = useContractInteraction();
   const { disconnect } = useDisconnect();
   const { data: balance } = useBalance({ address });
-
-  console.log(chain)
 
   return (
     <div className="relative z-10 w-full max-w-4xl mx-auto px-4 py-8">

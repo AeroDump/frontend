@@ -7,7 +7,7 @@ import { useSwitchChain } from 'wagmi';
 
 export const VaultLockingForm: React.FC = () => {
   const { switchChain } = useSwitchChain();
-  const { projectIdCrossChain, allowance, approveUSDC, lockTokens, lockedTokens, chain: connectedChain } = useContractInteraction();
+  const { projectIdCrossChain, allowance, approveUSDC, lockTokens, lockedTokens, chain: connectedChain, projectId } = useContractInteraction();
   const { recipients, currency, chain, setCurrentStepIndex } = useMultiStepContext();
   const [showApproveButton, setShowApproveButton] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
@@ -32,13 +32,13 @@ export const VaultLockingForm: React.FC = () => {
   }, [allowance, totalAmount]);
 
   useEffect(() => {
-    console.log("lockedTokens", lockedTokens)
-    const formattedlockedTokens = Number(lockedTokens);
-    const formattedTotalAmount = Number(totalAmount);
+    console.log(lockedTokens)
+    const formattedlockedTokens = Number(lockedTokens) || 0;
+    const formattedTotalAmount = Number(totalAmount) || 1;
     if (formattedlockedTokens >= formattedTotalAmount) {
       setCurrentStepIndex(3);
     }
-  }, [lockedTokens, totalAmount])
+  }, [lockedTokens, totalAmount, setCurrentStepIndex, projectId])
 
   const renderApproveButton = () => {
     if (showApproveButton) {
@@ -49,7 +49,7 @@ export const VaultLockingForm: React.FC = () => {
             setIsApproving(true);
           }}
           className="btn-primary"
-          disabled={isApproving}
+          disabled={isApproving || isLocking}
         >
           {isApproving ? 'Approving...' : 'Approve USDC'}
         </button>
@@ -90,7 +90,7 @@ export const VaultLockingForm: React.FC = () => {
       <p className="mb-4">From Chain: <span className="text-purple-400">{connectedChain?.name} ({connectedChain?.id})</span></p>
       <p className="mb-4">To Chain: <span className="text-purple-400">Base Sepolia ({chain})</span></p>
       <p className="mb-4">Project ID: <span className="text-purple-400">{projectIdCrossChain ? projectIdCrossChain.toString() : 'Not available'}</span></p>
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end mt-6 space-x-4">
         {renderApproveButton()}
         {renderLockButton()}
       </div>

@@ -3,10 +3,9 @@
 import React, { useState } from 'react';
 import { useMultiStepContext } from '@/contexts/MultiStepContext';
 import { useContractInteraction } from '@/hooks/useContractInteraction';
-import { Address } from 'viem';
 
 export const SendFromVault: React.FC = () => {
-  const { recipients, chain} = useMultiStepContext();
+  const { recipients, chain, setCurrentStepIndex} = useMultiStepContext();
   const { projectIdCrossChain, queueEqualDistribution} = useContractInteraction();
   const [isSending, setIsSending] = useState(false);
 
@@ -18,6 +17,7 @@ export const SendFromVault: React.FC = () => {
     }
     const recipientAddresses = recipients?.map((recipient) => recipient.walletAddress) ?? [];
     queueEqualDistribution(projectIdCrossChain.toString(), recipientAddresses, chain);
+    setCurrentStepIndex(4)
   };
 
   return (
