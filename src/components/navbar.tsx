@@ -16,6 +16,7 @@ type MenuLink = {
 
 const menuLinks: MenuLink[] = [
   { label: "Multisend", path: "/multisend", requiresAuth: false },
+  { label: "Dashboard", path: "/dashboard", requiresAuth: true },
 ];
 
 const NavBar: React.FC = () => {
