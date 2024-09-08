@@ -53,7 +53,7 @@ export const useContractInteraction = () => {
   const {data: lockedTokens} = useReadContract({
     ...OFTADAPTER_CONTRACT_OPTIMISM_SEPOLIA,
     functionName: 'getAmountLocked',
-    args: [projectIdCrossChain],
+    args: [address as Address],
   });
 
   const approveUSDC = (amount: bigint) => {
@@ -108,6 +108,7 @@ export const useContractInteraction = () => {
     chain,
     address,
     isConnected,
+    hash
   };
 };
 
